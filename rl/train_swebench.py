@@ -280,36 +280,71 @@ def main():
         return
 
     # ── Tinker training ──────────────────────────────────────────────────
-    from tinker_cookbook.rl.data_processing import assemble_training_data
-
     logger.info("Connecting to Tinker...")
     service_client = tinker.ServiceClient()
     training_client = service_client.create_lora_training_client(
         base_model=args.model, rank=args.lora_rank,
     )
 
-    # Assemble training data
-    data_D, metadata_D = assemble_training_data(groups_with_advantages, single_advantages)
-    logger.info(f"Assembled {len(data_D)} training datums")
-
-    # Filter out very long datums that might cause issues
+    # Build datums directly with only the 3 fields importance_sampling accepts:
+    # target_tokens, logprobs, advantages (NO weights/mask)
     MAX_DATUM_LEN = 8192
-    filtered_data = [d for d in data_D if d.model_input.length <= MAX_DATUM_LEN]
-    logger.info(f"After filtering (max {MAX_DATUM_LEN} tokens): {len(filtered_data)}/{len(data_D)} datums")
+    datums = []
+    adv_values = adv_tensor.tolist()
+    for i, group in enumerate(groups):
+        traj = group.trajectories_G[0]
+        advantage = adv_values[i]
+        for transition in traj.transitions:
+            ob_tokens = list(transition.ob.to_ints())
+            ac_tokens = transition.ac.tokens
+            ac_logprobs = transition.ac.logprobs
 
-    # Training step — batch datums to avoid overwhelming the API
+            # Full sequence: observation + action (shifted by 1 for targets)
+            full_tokens = ob_tokens + ac_tokens
+            if len(full_tokens) < 2 or len(full_tokens) > MAX_DATUM_LEN:
+                continue
+
+            input_tokens = full_tokens[:-1]
+            target_tokens = full_tokens[1:]
+            ob_len = len(ob_tokens) - 1  # -1 because of the shift
+
+            # Logprobs: 0 for observation tokens, actual logprobs for action tokens
+            padded_logprobs = [0.0] * ob_len + ac_logprobs
+            # Advantages: 0 for observation tokens, actual advantage for action tokens
+            padded_advantages = [0.0] * ob_len + [advantage] * len(ac_tokens)
+
+            # Trim to match lengths
+            min_len = min(len(input_tokens), len(target_tokens), len(padded_logprobs), len(padded_advantages))
+            input_tokens = input_tokens[:min_len]
+            target_tokens = target_tokens[:min_len]
+            padded_logprobs = padded_logprobs[:min_len]
+            padded_advantages = padded_advantages[:min_len]
+
+            datum = tinker.types.Datum(
+                model_input=tinker.types.ModelInput.from_ints(tokens=input_tokens),
+                loss_fn_inputs={
+                    "target_tokens": target_tokens,
+                    "logprobs": padded_logprobs,
+                    "advantages": padded_advantages,
+                },
+            )
+            datums.append(datum)
+
+    logger.info(f"Built {len(datums)} training datums (max {MAX_DATUM_LEN} tokens)")
+
+    # Training step — batch datums
     adam_params = tinker.types.AdamParams(
         learning_rate=args.learning_rate, beta1=0.9, beta2=0.95, eps=1e-8,
     )
 
-    BATCH_SIZE = 64
-    for batch_start in range(0, len(filtered_data), BATCH_SIZE):
-        batch = filtered_data[batch_start:batch_start + BATCH_SIZE]
-        batch_end = min(batch_start + BATCH_SIZE, len(filtered_data))
+    BATCH_SIZE = 32
+    for batch_start in range(0, len(datums), BATCH_SIZE):
+        batch = datums[batch_start:batch_start + BATCH_SIZE]
+        batch_end = min(batch_start + BATCH_SIZE, len(datums))
         logger.info(f"forward_backward batch [{batch_start}:{batch_end}] ({len(batch)} datums)...")
         fwd_bwd_future = training_client.forward_backward(batch, loss_fn="importance_sampling")
         fwd_bwd_result = fwd_bwd_future.result()
-        logger.info(f"  batch done")
+        logger.info(f"  batch done, loss={fwd_bwd_result.metrics.get('loss:sum', '?')}")
 
     logger.info("Running optim_step...")
     optim_future = training_client.optim_step(adam_params)
