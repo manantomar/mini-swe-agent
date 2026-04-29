@@ -292,17 +292,27 @@ def main():
     data_D, metadata_D = assemble_training_data(groups_with_advantages, single_advantages)
     logger.info(f"Assembled {len(data_D)} training datums")
 
-    # Training step
+    # Filter out very long datums that might cause issues
+    MAX_DATUM_LEN = 8192
+    filtered_data = [d for d in data_D if d.model_input.length <= MAX_DATUM_LEN]
+    logger.info(f"After filtering (max {MAX_DATUM_LEN} tokens): {len(filtered_data)}/{len(data_D)} datums")
+
+    # Training step — batch datums to avoid overwhelming the API
     adam_params = tinker.types.AdamParams(
         learning_rate=args.learning_rate, beta1=0.9, beta2=0.95, eps=1e-8,
     )
 
-    logger.info("Running forward_backward...")
-    fwd_bwd_future = training_client.forward_backward(data_D, loss_fn="importance_sampling")
+    BATCH_SIZE = 64
+    for batch_start in range(0, len(filtered_data), BATCH_SIZE):
+        batch = filtered_data[batch_start:batch_start + BATCH_SIZE]
+        batch_end = min(batch_start + BATCH_SIZE, len(filtered_data))
+        logger.info(f"forward_backward batch [{batch_start}:{batch_end}] ({len(batch)} datums)...")
+        fwd_bwd_future = training_client.forward_backward(batch, loss_fn="importance_sampling")
+        fwd_bwd_result = fwd_bwd_future.result()
+        logger.info(f"  batch done")
+
     logger.info("Running optim_step...")
     optim_future = training_client.optim_step(adam_params)
-
-    fwd_bwd_result = fwd_bwd_future.result()
     optim_result = optim_future.result()
     logger.info(f"Training step complete. Metrics: {optim_result.metrics}")
 
