@@ -84,6 +84,7 @@ def main(
     config_spec: list[str] = typer.Option(["mini.yaml"], "-c", "--config", help="Base config file(s)"),
     critique_model: str = typer.Option("anthropic/claude-sonnet-4-5-20250929", "--critique-model", help="Model for critique"),
     model_name: str | None = typer.Option(None, "-m", "--model", help="Override model for the coder agent"),
+    model_class: str | None = typer.Option(None, "--model-class", help="Model class (e.g., 'openrouter', 'litellm')"),
 ) -> None:
     # fmt: on
     """Run a self-improvement loop: agent solves task, critique analyzes failures, prompts are improved."""
@@ -92,8 +93,13 @@ def main(
 
     # Build base config
     configs = [get_config_from_spec(spec) for spec in config_spec]
-    if model_name:
-        configs.append({"model": {"model_name": model_name}})
+    if model_name or model_class:
+        model_override: dict = {}
+        if model_name:
+            model_override["model_name"] = model_name
+        if model_class:
+            model_override["model_class"] = model_class
+        configs.append({"model": model_override})
     # Force non-interactive mode
     configs.append({"agent": {"step_limit": 50, "cost_limit": 1.0}})
     config = recursive_merge(*configs)
