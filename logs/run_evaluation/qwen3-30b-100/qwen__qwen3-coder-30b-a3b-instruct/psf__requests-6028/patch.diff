@@ -1,0 +1,20 @@
+diff --git a/requests/adapters.py b/requests/adapters.py
+index fe22ff45..87613657 100644
+--- a/requests/adapters.py
++++ b/requests/adapters.py
+@@ -190,6 +190,15 @@ class HTTPAdapter(BaseAdapter):
+                 **proxy_kwargs
+             )
+         else:
++        username, password = get_auth_from_url(proxy)
++        if username and password:
++            # Remove auth from proxy URL to avoid conflicts
++            parsed = urlparse(proxy)
++            netloc = parsed.netloc
++            if "@" in netloc:
++                netloc = netloc.split("@", 1)[1]
++            proxy = parsed._replace(netloc=netloc).geturl()
++
+             proxy_headers = self.proxy_headers(proxy)
+             manager = self.proxy_manager[proxy] = proxy_from_url(
+                 proxy,

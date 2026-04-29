@@ -1,0 +1,14 @@
+diff --git a/django/db/models/sql/compiler.py b/django/db/models/sql/compiler.py
+index 7264929da8..cbc90c204c 100644
+--- a/django/db/models/sql/compiler.py
++++ b/django/db/models/sql/compiler.py
+@@ -231,6 +231,9 @@ class SQLCompiler:
+             # any model.
+             cols = self.query.select
+         if cols:
++            # For subqueries, limit to primary key to avoid selecting all fields
++            if cols and cols[0].alias == "U0":
++                cols = [cols[0]]
+             select_list = []
+             for col in cols:
+                 select_list.append(select_idx)

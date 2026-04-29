@@ -1,0 +1,1071 @@
++ source /opt/miniconda3/bin/activate
+++ _CONDA_ROOT=/opt/miniconda3
+++ . /opt/miniconda3/etc/profile.d/conda.sh
++++ export CONDA_EXE=/opt/miniconda3/bin/conda
++++ CONDA_EXE=/opt/miniconda3/bin/conda
++++ export _CE_M=
++++ _CE_M=
++++ export _CE_CONDA=
++++ _CE_CONDA=
++++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ '[' -z '' ']'
++++ export CONDA_SHLVL=0
++++ CONDA_SHLVL=0
++++ '[' -n '' ']'
++++++ dirname /opt/miniconda3/bin/conda
+++++ dirname /opt/miniconda3/bin
++++ PATH=/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
++++ export PATH
++++ '[' -z '' ']'
++++ PS1=
+++ conda activate
+++ local cmd=activate
+++ case "$cmd" in
+++ __conda_activate activate
+++ '[' -n '' ']'
+++ local ask_conda
++++ PS1=
++++ __conda_exe shell.posix activate
++++ /opt/miniconda3/bin/conda shell.posix activate
+++ ask_conda='PS1='\''(base) '\''
+export PATH='\''/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3'\''
+export CONDA_SHLVL='\''1'\''
+export CONDA_DEFAULT_ENV='\''base'\''
+export CONDA_PROMPT_MODIFIER='\''(base) '\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
+++ eval 'PS1='\''(base) '\''
+export PATH='\''/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3'\''
+export CONDA_SHLVL='\''1'\''
+export CONDA_DEFAULT_ENV='\''base'\''
+export CONDA_PROMPT_MODIFIER='\''(base) '\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
++++ PS1='(base) '
++++ export PATH=/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
++++ PATH=/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
++++ export CONDA_PREFIX=/opt/miniconda3
++++ CONDA_PREFIX=/opt/miniconda3
++++ export CONDA_SHLVL=1
++++ CONDA_SHLVL=1
++++ export CONDA_DEFAULT_ENV=base
++++ CONDA_DEFAULT_ENV=base
++++ export 'CONDA_PROMPT_MODIFIER=(base) '
++++ CONDA_PROMPT_MODIFIER='(base) '
++++ export CONDA_EXE=/opt/miniconda3/bin/conda
++++ CONDA_EXE=/opt/miniconda3/bin/conda
++++ export _CE_M=
++++ _CE_M=
++++ export _CE_CONDA=
++++ _CE_CONDA=
++++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
+++ __conda_hashr
+++ '[' -n '' ']'
+++ '[' -n '' ']'
+++ hash -r
++ conda activate testbed
++ local cmd=activate
++ case "$cmd" in
++ __conda_activate activate testbed
++ '[' -n '' ']'
++ local ask_conda
+++ PS1='(base) '
+++ __conda_exe shell.posix activate testbed
+++ /opt/miniconda3/bin/conda shell.posix activate testbed
++ ask_conda='PS1='\''(testbed) '\''
+export PATH='\''/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_SHLVL='\''2'\''
+export CONDA_DEFAULT_ENV='\''testbed'\''
+export CONDA_PROMPT_MODIFIER='\''(testbed) '\''
+export CONDA_PREFIX_1='\''/opt/miniconda3'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
++ eval 'PS1='\''(testbed) '\''
+export PATH='\''/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_SHLVL='\''2'\''
+export CONDA_DEFAULT_ENV='\''testbed'\''
+export CONDA_PROMPT_MODIFIER='\''(testbed) '\''
+export CONDA_PREFIX_1='\''/opt/miniconda3'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
+++ PS1='(testbed) '
+++ export PATH=/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+++ PATH=/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+++ export CONDA_PREFIX=/opt/miniconda3/envs/testbed
+++ CONDA_PREFIX=/opt/miniconda3/envs/testbed
+++ export CONDA_SHLVL=2
+++ CONDA_SHLVL=2
+++ export CONDA_DEFAULT_ENV=testbed
+++ CONDA_DEFAULT_ENV=testbed
+++ export 'CONDA_PROMPT_MODIFIER=(testbed) '
+++ CONDA_PROMPT_MODIFIER='(testbed) '
+++ export CONDA_PREFIX_1=/opt/miniconda3
+++ CONDA_PREFIX_1=/opt/miniconda3
+++ export CONDA_EXE=/opt/miniconda3/bin/conda
+++ CONDA_EXE=/opt/miniconda3/bin/conda
+++ export _CE_M=
+++ _CE_M=
+++ export _CE_CONDA=
+++ _CE_CONDA=
+++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
+++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++ __conda_hashr
++ '[' -n '' ']'
++ '[' -n '' ']'
++ hash -r
++ cd /testbed
++ sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen
++ locale-gen
+Generating locales (this might take a while)...
+  en_US.UTF-8... done
+Generation complete.
++ export LANG=en_US.UTF-8
++ LANG=en_US.UTF-8
++ export LANGUAGE=en_US:en
++ LANGUAGE=en_US:en
++ export LC_ALL=en_US.UTF-8
++ LC_ALL=en_US.UTF-8
++ git config --global --add safe.directory /testbed
++ cd /testbed
++ git status
+On branch main
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   django/db/migrations/autodetector.py
+
+no changes added to commit (use "git add" and/or "git commit -a")
++ git show
+commit 5c5610d223d1a1ec3ef806777c6ca4fa42682b84
+Author: SWE-bench <setup@swebench.config>
+Date:   Wed Sep 10 10:47:21 2025 +0000
+
+    SWE-bench
++ git -c core.fileMode=false diff 18759b2209ff556aed7f20d83cbf23e3d234e41c
+diff --git a/django/db/migrations/autodetector.py b/django/db/migrations/autodetector.py
+index 30616c0172..aaa132f8b2 100644
+--- a/django/db/migrations/autodetector.py
++++ b/django/db/migrations/autodetector.py
+@@ -192,6 +192,8 @@ class MigrationAutodetector:
+         self.generate_altered_order_with_respect_to()
+ 
+         self._sort_migrations()
++        self._reorder_field_operations_for_inheritance()
++
+         self._build_migration_list(graph)
+         self._optimize_migrations()
+ 
+@@ -334,6 +336,34 @@ class MigrationAutodetector:
+                     raise ValueError("Cannot resolve operation dependencies: %r" % self.generated_operations)
+             num_ops = new_num_ops
+ 
++    def _reorder_field_operations_for_inheritance(self):
++        """
++        Reorder field operations to handle inheritance scenarios properly.
++        """
++        for app_label, ops in self.generated_operations.items():
++            # Create a new list with proper ordering
++            new_ops = []
++            
++            # Separate operations
++            remove_field_ops = []
++            create_model_ops = []
++            other_ops = []
++            
++            for op in ops:
++                if isinstance(op, operations.RemoveField):
++                    remove_field_ops.append(op)
++                elif isinstance(op, operations.CreateModel):
++                    create_model_ops.append(op)
++                else:
++                    other_ops.append(op)
++            
++            # Add operations in proper order: other, remove_field, create_model
++            new_ops.extend(other_ops)
++            new_ops.extend(remove_field_ops)
++            new_ops.extend(create_model_ops)
++            
++            self.generated_operations[app_label] = new_ops
++
+     def _sort_migrations(self):
+         """
+         Reorder to make things possible. Reordering may be needed so FKs work
++ source /opt/miniconda3/bin/activate
+++ _CONDA_ROOT=/opt/miniconda3
+++ . /opt/miniconda3/etc/profile.d/conda.sh
++++ export CONDA_EXE=/opt/miniconda3/bin/conda
++++ CONDA_EXE=/opt/miniconda3/bin/conda
++++ export _CE_M=
++++ _CE_M=
++++ export _CE_CONDA=
++++ _CE_CONDA=
++++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ '[' -z x ']'
+++ conda activate
+++ local cmd=activate
+++ case "$cmd" in
+++ __conda_activate activate
+++ '[' -n '' ']'
+++ local ask_conda
++++ PS1='(testbed) '
++++ __conda_exe shell.posix activate
++++ /opt/miniconda3/bin/conda shell.posix activate
+++ ask_conda='PS1='\''(base) '\''
+export PATH='\''/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3'\''
+export CONDA_SHLVL='\''3'\''
+export CONDA_DEFAULT_ENV='\''base'\''
+export CONDA_PROMPT_MODIFIER='\''(base) '\''
+export CONDA_PREFIX_2='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
+++ eval 'PS1='\''(base) '\''
+export PATH='\''/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3'\''
+export CONDA_SHLVL='\''3'\''
+export CONDA_DEFAULT_ENV='\''base'\''
+export CONDA_PROMPT_MODIFIER='\''(base) '\''
+export CONDA_PREFIX_2='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
++++ PS1='(base) '
++++ export PATH=/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
++++ PATH=/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
++++ export CONDA_PREFIX=/opt/miniconda3
++++ CONDA_PREFIX=/opt/miniconda3
++++ export CONDA_SHLVL=3
++++ CONDA_SHLVL=3
++++ export CONDA_DEFAULT_ENV=base
++++ CONDA_DEFAULT_ENV=base
++++ export 'CONDA_PROMPT_MODIFIER=(base) '
++++ CONDA_PROMPT_MODIFIER='(base) '
++++ export CONDA_PREFIX_2=/opt/miniconda3/envs/testbed
++++ CONDA_PREFIX_2=/opt/miniconda3/envs/testbed
++++ export CONDA_EXE=/opt/miniconda3/bin/conda
++++ CONDA_EXE=/opt/miniconda3/bin/conda
++++ export _CE_M=
++++ _CE_M=
++++ export _CE_CONDA=
++++ _CE_CONDA=
++++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
+++ __conda_hashr
+++ '[' -n '' ']'
+++ '[' -n '' ']'
+++ hash -r
++ conda activate testbed
++ local cmd=activate
++ case "$cmd" in
++ __conda_activate activate testbed
++ '[' -n '' ']'
++ local ask_conda
+++ PS1='(base) '
+++ __conda_exe shell.posix activate testbed
+++ /opt/miniconda3/bin/conda shell.posix activate testbed
++ ask_conda='PS1='\''(testbed) '\''
+export PATH='\''/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_SHLVL='\''4'\''
+export CONDA_DEFAULT_ENV='\''testbed'\''
+export CONDA_PROMPT_MODIFIER='\''(testbed) '\''
+export CONDA_PREFIX_3='\''/opt/miniconda3'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
++ eval 'PS1='\''(testbed) '\''
+export PATH='\''/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_SHLVL='\''4'\''
+export CONDA_DEFAULT_ENV='\''testbed'\''
+export CONDA_PROMPT_MODIFIER='\''(testbed) '\''
+export CONDA_PREFIX_3='\''/opt/miniconda3'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
+++ PS1='(testbed) '
+++ export PATH=/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+++ PATH=/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+++ export CONDA_PREFIX=/opt/miniconda3/envs/testbed
+++ CONDA_PREFIX=/opt/miniconda3/envs/testbed
+++ export CONDA_SHLVL=4
+++ CONDA_SHLVL=4
+++ export CONDA_DEFAULT_ENV=testbed
+++ CONDA_DEFAULT_ENV=testbed
+++ export 'CONDA_PROMPT_MODIFIER=(testbed) '
+++ CONDA_PROMPT_MODIFIER='(testbed) '
+++ export CONDA_PREFIX_3=/opt/miniconda3
+++ CONDA_PREFIX_3=/opt/miniconda3
+++ export CONDA_EXE=/opt/miniconda3/bin/conda
+++ CONDA_EXE=/opt/miniconda3/bin/conda
+++ export _CE_M=
+++ _CE_M=
+++ export _CE_CONDA=
+++ _CE_CONDA=
+++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
+++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++ __conda_hashr
++ '[' -n '' ']'
++ '[' -n '' ']'
++ hash -r
++ python -m pip install -e .
+Obtaining file:///testbed
+Requirement already satisfied: asgiref>=3.2 in /opt/miniconda3/envs/testbed/lib/python3.6/site-packages (from Django==3.2) (3.4.1)
+Requirement already satisfied: pytz in /opt/miniconda3/envs/testbed/lib/python3.6/site-packages (from Django==3.2) (2024.2)
+Requirement already satisfied: sqlparse>=0.2.2 in /opt/miniconda3/envs/testbed/lib/python3.6/site-packages (from Django==3.2) (0.4.4)
+Requirement already satisfied: typing-extensions in /opt/miniconda3/envs/testbed/lib/python3.6/site-packages (from asgiref>=3.2->Django==3.2) (4.1.1)
+Installing collected packages: Django
+  Attempting uninstall: Django
+    Found existing installation: Django 3.2
+    Uninstalling Django-3.2:
+      Successfully uninstalled Django-3.2
+  Running setup.py develop for Django
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
+Successfully installed Django-3.2
++ git checkout 18759b2209ff556aed7f20d83cbf23e3d234e41c tests/migrations/test_autodetector.py
+Updated 0 paths from e43c6ebd35
++ git apply -v -
+Checking patch tests/migrations/test_autodetector.py...
+Applied patch tests/migrations/test_autodetector.py cleanly.
++ : '>>>>> Start Test Output'
++ ./tests/runtests.py --verbosity 2 --settings=test_sqlite --parallel 1 migrations.test_autodetector
+Creating test database for alias 'default' ('file:memorydb_default?mode=memory&cache=shared')...
+test_add_alter_order_with_respect_to (migrations.test_autodetector.AutodetectorTests) ... ok
+test_add_blank_textfield_and_charfield (migrations.test_autodetector.AutodetectorTests) ... ok
+test_add_constraints (migrations.test_autodetector.AutodetectorTests)
+Test change detection of new constraints. ... ok
+test_add_date_fields_with_auto_now_add_asking_for_default (migrations.test_autodetector.AutodetectorTests) ... ok
+test_add_date_fields_with_auto_now_add_not_asking_for_null_addition (migrations.test_autodetector.AutodetectorTests) ... ok
+test_add_date_fields_with_auto_now_not_asking_for_default (migrations.test_autodetector.AutodetectorTests) ... ok
+test_add_field (migrations.test_autodetector.AutodetectorTests)
+Tests autodetection of new fields. ... ok
+test_add_field_and_foo_together (migrations.test_autodetector.AutodetectorTests) ... ok
+test_add_field_with_default (migrations.test_autodetector.AutodetectorTests)
+#22030 - Adding a field with a default should work. ... ok
+test_add_foo_together (migrations.test_autodetector.AutodetectorTests)
+Tests index/unique_together detection. ... ok
+test_add_indexes (migrations.test_autodetector.AutodetectorTests)
+Test change detection of new indexes. ... ok
+test_add_many_to_many (migrations.test_autodetector.AutodetectorTests)
+#22435 - Adding a ManyToManyField should not prompt for a default. ... ok
+test_add_model_order_with_respect_to (migrations.test_autodetector.AutodetectorTests) ... ERROR
+test_add_model_with_field_removed_from_base_model (migrations.test_autodetector.AutodetectorTests) ... ok
+test_add_non_blank_textfield_and_charfield (migrations.test_autodetector.AutodetectorTests) ... ok
+test_alter_db_table_add (migrations.test_autodetector.AutodetectorTests)
+Tests detection for adding db_table in model's options. ... ok
+test_alter_db_table_change (migrations.test_autodetector.AutodetectorTests)
+Tests detection for changing db_table in model's options'. ... ok
+test_alter_db_table_no_changes (migrations.test_autodetector.AutodetectorTests) ... ok
+test_alter_db_table_remove (migrations.test_autodetector.AutodetectorTests)
+Tests detection for removing db_table in model's options. ... ok
+test_alter_db_table_with_model_change (migrations.test_autodetector.AutodetectorTests) ... ok
+test_alter_field (migrations.test_autodetector.AutodetectorTests)
+Tests autodetection of new fields. ... ok
+test_alter_field_to_fk_dependency_other_app (migrations.test_autodetector.AutodetectorTests) ... ok
+test_alter_field_to_not_null_oneoff_default (migrations.test_autodetector.AutodetectorTests) ... ok
+test_alter_field_to_not_null_with_default (migrations.test_autodetector.AutodetectorTests) ... ok
+test_alter_field_to_not_null_without_default (migrations.test_autodetector.AutodetectorTests) ... ok
+test_alter_fk_before_model_deletion (migrations.test_autodetector.AutodetectorTests) ... FAIL
+test_alter_many_to_many (migrations.test_autodetector.AutodetectorTests) ... ok
+test_alter_model_managers (migrations.test_autodetector.AutodetectorTests) ... ok
+test_alter_model_options (migrations.test_autodetector.AutodetectorTests)
+Changing a model's options should make a change. ... ok
+test_alter_model_options_proxy (migrations.test_autodetector.AutodetectorTests)
+Changing a proxy model's options should also make a change. ... ok
+test_arrange_for_graph (migrations.test_autodetector.AutodetectorTests)
+Tests auto-naming of migrations for graph matching. ... ok
+test_bases_first (migrations.test_autodetector.AutodetectorTests)
+Bases of other models come first. ... ok
+test_circular_dependency_mixed_addcreate (migrations.test_autodetector.AutodetectorTests) ... ERROR
+test_circular_dependency_swappable (migrations.test_autodetector.AutodetectorTests) ... ERROR
+test_circular_dependency_swappable2 (migrations.test_autodetector.AutodetectorTests) ... ERROR
+test_circular_dependency_swappable_self (migrations.test_autodetector.AutodetectorTests) ... FAIL
+test_circular_fk_dependency (migrations.test_autodetector.AutodetectorTests) ... ERROR
+test_concrete_field_changed_to_many_to_many (migrations.test_autodetector.AutodetectorTests) ... FAIL
+test_create_model_and_unique_together (migrations.test_autodetector.AutodetectorTests) ... FAIL
+test_create_model_with_check_constraint (migrations.test_autodetector.AutodetectorTests)
+Test creation of new model with constraints already defined. ... FAIL
+test_create_model_with_indexes (migrations.test_autodetector.AutodetectorTests)
+Test creation of new model with indexes already defined. ... FAIL
+test_create_with_through_model (migrations.test_autodetector.AutodetectorTests) ... FAIL
+test_custom_deconstructible (migrations.test_autodetector.AutodetectorTests) ... ok
+test_custom_migration_name (migrations.test_autodetector.AutodetectorTests)
+Tests custom naming of migrations for graph matching. ... ok
+test_deconstruct_field_kwarg (migrations.test_autodetector.AutodetectorTests)
+Field instances are handled correctly by nested deconstruction. ... ok
+test_deconstruct_type (migrations.test_autodetector.AutodetectorTests) ... ok
+test_deconstructible_dict (migrations.test_autodetector.AutodetectorTests)
+Nested deconstruction descends into dict values. ... ok
+test_deconstructible_list (migrations.test_autodetector.AutodetectorTests)
+Nested deconstruction descends into lists. ... ok
+test_deconstructible_tuple (migrations.test_autodetector.AutodetectorTests)
+Nested deconstruction descends into tuples. ... ok
+test_default_related_name_option (migrations.test_autodetector.AutodetectorTests) ... ok
+test_different_regex_does_alter (migrations.test_autodetector.AutodetectorTests) ... ok
+test_empty_foo_together (migrations.test_autodetector.AutodetectorTests) ... ok
+test_first_dependency (migrations.test_autodetector.AutodetectorTests) ... FAIL
+test_fk_dependency (migrations.test_autodetector.AutodetectorTests)
+Having a ForeignKey automatically adds a dependency. ... FAIL
+test_fk_dependency_other_app (migrations.test_autodetector.AutodetectorTests) ... ok
+test_foo_together_no_changes (migrations.test_autodetector.AutodetectorTests) ... ok
+test_foo_together_ordering (migrations.test_autodetector.AutodetectorTests) ... ok
+test_foo_together_remove_fk (migrations.test_autodetector.AutodetectorTests)
+Tests unique_together and field removal detection & ordering ... ok
+test_foreign_key_removed_before_target_model (migrations.test_autodetector.AutodetectorTests) ... FAIL
+test_identical_regex_doesnt_alter (migrations.test_autodetector.AutodetectorTests) ... ok
+test_keep_db_table_with_model_change (migrations.test_autodetector.AutodetectorTests) ... ok
+test_last_dependency (migrations.test_autodetector.AutodetectorTests) ... FAIL
+test_m2m_w_through_multistep_remove (migrations.test_autodetector.AutodetectorTests) ... FAIL
+test_managed_to_unmanaged (migrations.test_autodetector.AutodetectorTests) ... ok
+test_many_to_many_changed_to_concrete_field (migrations.test_autodetector.AutodetectorTests) ... FAIL
+test_many_to_many_removed_before_through_model (migrations.test_autodetector.AutodetectorTests) ... FAIL
+test_many_to_many_removed_before_through_model_2 (migrations.test_autodetector.AutodetectorTests) ... FAIL
+test_mti_inheritance_model_removal (migrations.test_autodetector.AutodetectorTests) ... FAIL
+test_multiple_bases (migrations.test_autodetector.AutodetectorTests)
+#23956 - Inheriting models doesn't move *_ptr fields into AddField operations. ... ok
+test_nested_deconstructible_objects (migrations.test_autodetector.AutodetectorTests) ... ok
+test_new_model (migrations.test_autodetector.AutodetectorTests)
+Tests autodetection of new models. ... ok
+test_non_circular_foreignkey_dependency_removal (migrations.test_autodetector.AutodetectorTests) ... FAIL
+test_old_model (migrations.test_autodetector.AutodetectorTests)
+Tests deletion of old models. ... ok
+test_order_fields_indexes (migrations.test_autodetector.AutodetectorTests)
+Test change detection of reordering of fields in indexes. ... ok
+test_pk_fk_included (migrations.test_autodetector.AutodetectorTests) ... ok
+test_proxy (migrations.test_autodetector.AutodetectorTests)
+The autodetector correctly deals with proxy models. ... ok
+test_proxy_bases_first (migrations.test_autodetector.AutodetectorTests)
+Bases of proxies come first. ... ok
+test_proxy_custom_pk (migrations.test_autodetector.AutodetectorTests) ... ERROR
+test_proxy_fk_dependency (migrations.test_autodetector.AutodetectorTests)
+FK dependencies still work on proxy models. ... FAIL
+test_proxy_to_mti_with_fk_to_proxy (migrations.test_autodetector.AutodetectorTests) ... ERROR
+test_proxy_to_mti_with_fk_to_proxy_proxy (migrations.test_autodetector.AutodetectorTests) ... ERROR
+test_remove_alter_order_with_respect_to (migrations.test_autodetector.AutodetectorTests) ... ok
+test_remove_constraints (migrations.test_autodetector.AutodetectorTests)
+Test change detection of removed constraints. ... ok
+test_remove_field (migrations.test_autodetector.AutodetectorTests)
+Tests autodetection of removed fields. ... ok
+test_remove_field_and_foo_together (migrations.test_autodetector.AutodetectorTests) ... ok
+test_remove_foo_together (migrations.test_autodetector.AutodetectorTests)
+Tests index/unique_together detection. ... ok
+test_remove_indexes (migrations.test_autodetector.AutodetectorTests)
+Test change detection of removed indexes. ... ok
+test_rename_field (migrations.test_autodetector.AutodetectorTests)
+Tests autodetection of renamed fields. ... ok
+test_rename_field_and_foo_together (migrations.test_autodetector.AutodetectorTests) ... ok
+test_rename_field_foreign_key_to_field (migrations.test_autodetector.AutodetectorTests) ... ok
+test_rename_field_preserved_db_column (migrations.test_autodetector.AutodetectorTests) ... ok
+test_rename_foreign_object_fields (migrations.test_autodetector.AutodetectorTests) ... ok
+test_rename_m2m_through_model (migrations.test_autodetector.AutodetectorTests) ... ok
+test_rename_model (migrations.test_autodetector.AutodetectorTests)
+Tests autodetection of renamed models. ... ok
+test_rename_model_case (migrations.test_autodetector.AutodetectorTests) ... ok
+test_rename_model_reverse_relation_dependencies (migrations.test_autodetector.AutodetectorTests) ... ok
+test_rename_model_with_fks_in_different_position (migrations.test_autodetector.AutodetectorTests) ... ok
+test_rename_model_with_renamed_rel_field (migrations.test_autodetector.AutodetectorTests) ... ok
+test_rename_referenced_primary_key (migrations.test_autodetector.AutodetectorTests) ... ok
+test_rename_related_field_preserved_db_column (migrations.test_autodetector.AutodetectorTests) ... ok
+test_replace_string_with_foreignkey (migrations.test_autodetector.AutodetectorTests) ... FAIL
+test_same_app_circular_fk_dependency (migrations.test_autodetector.AutodetectorTests) ... FAIL
+test_same_app_circular_fk_dependency_with_unique_together_and_indexes (migrations.test_autodetector.AutodetectorTests) ... FAIL
+test_same_app_no_fk_dependency (migrations.test_autodetector.AutodetectorTests) ... FAIL
+test_set_alter_order_with_respect_to (migrations.test_autodetector.AutodetectorTests)
+Setting order_with_respect_to adds a field. ... ok
+test_supports_functools_partial (migrations.test_autodetector.AutodetectorTests) ... ok
+test_swappable (migrations.test_autodetector.AutodetectorTests) ... FAIL
+test_swappable_changed (migrations.test_autodetector.AutodetectorTests) ... ok
+test_swappable_circular_multi_mti (migrations.test_autodetector.AutodetectorTests) ... FAIL
+test_swappable_first_inheritance (migrations.test_autodetector.AutodetectorTests)
+Swappable models get their CreateModel first. ... ok
+test_swappable_first_setting (migrations.test_autodetector.AutodetectorTests)
+Swappable models get their CreateModel first. ... ok
+test_trim_apps (migrations.test_autodetector.AutodetectorTests) ... ok
+test_unmanaged_create (migrations.test_autodetector.AutodetectorTests)
+The autodetector correctly deals with managed models. ... ok
+test_unmanaged_custom_pk (migrations.test_autodetector.AutodetectorTests) ... ERROR
+test_unmanaged_delete (migrations.test_autodetector.AutodetectorTests) ... FAIL
+test_unmanaged_to_managed (migrations.test_autodetector.AutodetectorTests) ... ok
+
+======================================================================
+ERROR: test_add_model_order_with_respect_to (migrations.test_autodetector.AutodetectorTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/testbed/tests/migrations/test_autodetector.py", line 2125, in test_add_model_order_with_respect_to
+    changes = self.get_changes([], [self.book, self.author_with_book_order_wrt])
+  File "/testbed/tests/migrations/test_autodetector.py", line 590, in get_changes
+    questioner,
+  File "/testbed/django/db/migrations/autodetector.py", line 197, in _detect_changes
+    self._build_migration_list(graph)
+  File "/testbed/django/db/migrations/autodetector.py", line 336, in _build_migration_list
+    raise ValueError("Cannot resolve operation dependencies: %r" % self.generated_operations)
+ValueError: Cannot resolve operation dependencies: {'testapp': [<AddField  model_name='author', name='book', field=<django.db.models.fields.related.ForeignKey: book>>, <AlterOrderWithRespectTo  name='author', order_with_respect_to='book'>, <CreateModel  name='Author', fields=[('id', <django.db.models.fields.AutoField>), ('name', <django.db.models.fields.CharField>)], options={}, bases=(<class 'django.db.models.base.Model'>,), managers=[]>], 'otherapp': [<AddField  model_name='book', name='author', field=<django.db.models.fields.related.ForeignKey: author>>, <CreateModel  name='Book', fields=[('id', <django.db.models.fields.AutoField>), ('title', <django.db.models.fields.CharField>)], options={}, bases=(<class 'django.db.models.base.Model'>,), managers=[]>]}
+
+======================================================================
+ERROR: test_circular_dependency_mixed_addcreate (migrations.test_autodetector.AutodetectorTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/testbed/tests/migrations/test_autodetector.py", line 2327, in test_circular_dependency_mixed_addcreate
+    changes = self.get_changes([], [address, person, apackage, country])
+  File "/testbed/tests/migrations/test_autodetector.py", line 590, in get_changes
+    questioner,
+  File "/testbed/django/db/migrations/autodetector.py", line 197, in _detect_changes
+    self._build_migration_list(graph)
+  File "/testbed/django/db/migrations/autodetector.py", line 336, in _build_migration_list
+    raise ValueError("Cannot resolve operation dependencies: %r" % self.generated_operations)
+ValueError: Cannot resolve operation dependencies: {'b': [<AddField  model_name='apackage', name='person', field=<django.db.models.fields.related.ForeignKey: person>>, <CreateModel  name='APackage', fields=[('id', <django.db.models.fields.AutoField>)], options={}, bases=(<class 'django.db.models.base.Model'>,), managers=[]>, <CreateModel  name='DeliveryCountry', fields=[('id', <django.db.models.fields.AutoField>)], options={}, bases=(<class 'django.db.models.base.Model'>,), managers=[]>], 'a': [<AddField  model_name='address', name='country', field=<django.db.models.fields.related.ForeignKey: country>>, <CreateModel  name='Address', fields=[('id', <django.db.models.fields.AutoField>)], options={}, bases=(<class 'django.db.models.base.Model'>,), managers=[]>, <CreateModel  name='Person', fields=[('id', <django.db.models.fields.AutoField>)], options={}, bases=(<class 'django.db.models.base.Model'>,), managers=[]>]}
+
+======================================================================
+ERROR: test_circular_dependency_swappable (migrations.test_autodetector.AutodetectorTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/testbed/django/test/utils.py", line 381, in inner
+    return func(*args, **kwargs)
+  File "/testbed/tests/migrations/test_autodetector.py", line 2351, in test_circular_dependency_swappable
+    changes = self.get_changes([], [address, tenant])
+  File "/testbed/tests/migrations/test_autodetector.py", line 590, in get_changes
+    questioner,
+  File "/testbed/django/db/migrations/autodetector.py", line 197, in _detect_changes
+    self._build_migration_list(graph)
+  File "/testbed/django/db/migrations/autodetector.py", line 336, in _build_migration_list
+    raise ValueError("Cannot resolve operation dependencies: %r" % self.generated_operations)
+ValueError: Cannot resolve operation dependencies: {'b': [<AddField  model_name='address', name='tenant', field=<django.db.models.fields.related.ForeignKey: tenant>>, <CreateModel  name='Address', fields=[('id', <django.db.models.fields.AutoField>)], options={}, bases=(<class 'django.db.models.base.Model'>,), managers=[]>], 'a': [<AddField  model_name='tenant', name='primary_address', field=<django.db.models.fields.related.ForeignKey: primary_address>>, <CreateModel  name='Tenant', fields=[('id', <django.db.models.fields.AutoField>)], options={}, bases=(<class 'django.contrib.auth.base_user.AbstractBaseUser'>,), managers=[]>]}
+
+======================================================================
+ERROR: test_circular_dependency_swappable2 (migrations.test_autodetector.AutodetectorTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/testbed/django/test/utils.py", line 381, in inner
+    return func(*args, **kwargs)
+  File "/testbed/tests/migrations/test_autodetector.py", line 2381, in test_circular_dependency_swappable2
+    changes = self.get_changes([], [address, tenant])
+  File "/testbed/tests/migrations/test_autodetector.py", line 590, in get_changes
+    questioner,
+  File "/testbed/django/db/migrations/autodetector.py", line 197, in _detect_changes
+    self._build_migration_list(graph)
+  File "/testbed/django/db/migrations/autodetector.py", line 336, in _build_migration_list
+    raise ValueError("Cannot resolve operation dependencies: %r" % self.generated_operations)
+ValueError: Cannot resolve operation dependencies: {'a': [<AddField  model_name='address', name='tenant', field=<django.db.models.fields.related.ForeignKey: tenant>>, <CreateModel  name='Address', fields=[('id', <django.db.models.fields.AutoField>)], options={}, bases=(<class 'django.db.models.base.Model'>,), managers=[]>], 'b': [<AddField  model_name='tenant', name='primary_address', field=<django.db.models.fields.related.ForeignKey: primary_address>>, <CreateModel  name='Tenant', fields=[('id', <django.db.models.fields.AutoField>)], options={}, bases=(<class 'django.contrib.auth.base_user.AbstractBaseUser'>,), managers=[]>]}
+
+======================================================================
+ERROR: test_circular_fk_dependency (migrations.test_autodetector.AutodetectorTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/testbed/tests/migrations/test_autodetector.py", line 1208, in test_circular_fk_dependency
+    changes = self.get_changes([], [self.author_with_book, self.book, self.publisher_with_book])
+  File "/testbed/tests/migrations/test_autodetector.py", line 590, in get_changes
+    questioner,
+  File "/testbed/django/db/migrations/autodetector.py", line 197, in _detect_changes
+    self._build_migration_list(graph)
+  File "/testbed/django/db/migrations/autodetector.py", line 336, in _build_migration_list
+    raise ValueError("Cannot resolve operation dependencies: %r" % self.generated_operations)
+ValueError: Cannot resolve operation dependencies: {'testapp': [<AddField  model_name='publisher', name='author', field=<django.db.models.fields.related.ForeignKey: author>>, <AddField  model_name='author', name='book', field=<django.db.models.fields.related.ForeignKey: book>>, <CreateModel  name='Author', fields=[('id', <django.db.models.fields.AutoField>), ('name', <django.db.models.fields.CharField>)], options={}, bases=(<class 'django.db.models.base.Model'>,), managers=[]>, <CreateModel  name='Publisher', fields=[('id', <django.db.models.fields.AutoField>), ('name', <django.db.models.fields.CharField>)], options={}, bases=(<class 'django.db.models.base.Model'>,), managers=[]>], 'otherapp': [<AddField  model_name='book', name='author', field=<django.db.models.fields.related.ForeignKey: author>>, <CreateModel  name='Book', fields=[('id', <django.db.models.fields.AutoField>), ('title', <django.db.models.fields.CharField>)], options={}, bases=(<class 'django.db.models.base.Model'>,), managers=[]>]}
+
+======================================================================
+ERROR: test_proxy_custom_pk (migrations.test_autodetector.AutodetectorTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/testbed/tests/migrations/test_autodetector.py", line 1628, in test_proxy_custom_pk
+    self.assertEqual(changes['otherapp'][0].operations[0].fields[2][1].remote_field.field_name, 'id')
+AttributeError: 'AddField' object has no attribute 'fields'
+
+======================================================================
+ERROR: test_proxy_to_mti_with_fk_to_proxy (migrations.test_autodetector.AutodetectorTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/testbed/tests/migrations/test_autodetector.py", line 1641, in test_proxy_to_mti_with_fk_to_proxy
+    changes['otherapp'][0].operations[0].fields[2][1].remote_field.model._meta.db_table,
+AttributeError: 'AddField' object has no attribute 'fields'
+
+======================================================================
+ERROR: test_proxy_to_mti_with_fk_to_proxy_proxy (migrations.test_autodetector.AutodetectorTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/testbed/tests/migrations/test_autodetector.py", line 1674, in test_proxy_to_mti_with_fk_to_proxy_proxy
+    changes['otherapp'][0].operations[0].fields[1][1].remote_field.model._meta.db_table,
+AttributeError: 'AddField' object has no attribute 'fields'
+
+======================================================================
+ERROR: test_unmanaged_custom_pk (migrations.test_autodetector.AutodetectorTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/testbed/tests/migrations/test_autodetector.py", line 1743, in test_unmanaged_custom_pk
+    self.assertEqual(changes['otherapp'][0].operations[0].fields[2][1].remote_field.field_name, 'id')
+AttributeError: 'AddField' object has no attribute 'fields'
+
+======================================================================
+FAIL: test_alter_fk_before_model_deletion (migrations.test_autodetector.AutodetectorTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/testbed/tests/migrations/test_autodetector.py", line 2283, in test_alter_fk_before_model_deletion
+    self.assertOperationTypes(changes, 'testapp', 0, ["CreateModel", "AlterField", "DeleteModel"])
+  File "/testbed/tests/migrations/test_autodetector.py", line 517, in assertOperationTypes
+    self.repr_changes(changes),
+AssertionError: Operation type mismatch for testapp.auto_1 (expected ['CreateModel', 'AlterField', 'DeleteModel']):
+  testapp:
+    auto_1
+      <AlterField  model_name='publisher', name='author', field=<django.db.models.fields.related.ForeignKey: author>, preserve_default=True>
+      <DeleteModel  name='Author'>
+      <CreateModel  name='Aardvark', fields=[('id', <django.db.models.fields.AutoField>)], options={}, bases=(<class 'django.db.models.base.Model'>,), managers=[]>
+
+
+======================================================================
+FAIL: test_circular_dependency_swappable_self (migrations.test_autodetector.AutodetectorTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/testbed/django/test/utils.py", line 381, in inner
+    return func(*args, **kwargs)
+  File "/testbed/tests/migrations/test_autodetector.py", line 2407, in test_circular_dependency_swappable_self
+    self.assertOperationTypes(changes, 'a', 0, ["CreateModel"])
+  File "/testbed/tests/migrations/test_autodetector.py", line 517, in assertOperationTypes
+    self.repr_changes(changes),
+AssertionError: Operation type mismatch for a.auto_1 (expected ['CreateModel']):
+  a:
+    auto_1
+      <AddField  model_name='person', name='parent1', field=<django.db.models.fields.related.ForeignKey: parent1>>
+      <CreateModel  name='Person', fields=[('id', <django.db.models.fields.AutoField>)], options={}, bases=(<class 'django.db.models.base.Model'>,), managers=[]>
+
+
+======================================================================
+FAIL: test_concrete_field_changed_to_many_to_many (migrations.test_autodetector.AutodetectorTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/testbed/tests/migrations/test_autodetector.py", line 2026, in test_concrete_field_changed_to_many_to_many
+    self.assertOperationTypes(changes, "testapp", 0, ["CreateModel", "RemoveField", "AddField"])
+  File "/testbed/tests/migrations/test_autodetector.py", line 517, in assertOperationTypes
+    self.repr_changes(changes),
+AssertionError: Operation type mismatch for testapp.auto_1 (expected ['CreateModel', 'RemoveField', 'AddField']):
+  testapp:
+    auto_1
+      <CreateModel  name='Publisher', fields=[('id', <django.db.models.fields.AutoField>), ('name', <django.db.models.fields.CharField>)], options={}, bases=(<class 'django.db.models.base.Model'>,), managers=[]>
+
+
+======================================================================
+FAIL: test_create_model_and_unique_together (migrations.test_autodetector.AutodetectorTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/testbed/tests/migrations/test_autodetector.py", line 1565, in test_create_model_and_unique_together
+    ['CreateModel', 'AddField', 'AlterUniqueTogether', 'AlterIndexTogether']
+  File "/testbed/tests/migrations/test_autodetector.py", line 517, in assertOperationTypes
+    self.repr_changes(changes),
+AssertionError: Operation type mismatch for otherapp.auto_1 (expected ['CreateModel', 'AddField', 'AlterUniqueTogether', 'AlterIndexTogether']):
+  otherapp:
+    auto_1
+      <AddField  model_name='book', name='author', field=<django.db.models.fields.related.ForeignKey>, preserve_default=False>
+      <AlterUniqueTogether  name='book', unique_together={('title', 'author')}>
+      <AlterIndexTogether  name='book', index_together={('title', 'author')}>
+      <CreateModel  name='Author', fields=[('id', <django.db.models.fields.AutoField>), ('name', <django.db.models.fields.CharField>)], options={}, bases=(<class 'django.db.models.base.Model'>,), managers=[]>
+
+
+======================================================================
+FAIL: test_create_model_with_check_constraint (migrations.test_autodetector.AutodetectorTests)
+Test creation of new model with constraints already defined.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/testbed/tests/migrations/test_autodetector.py", line 1456, in test_create_model_with_check_constraint
+    self.assertOperationTypes(changes, 'otherapp', 0, ['CreateModel', 'AddConstraint'])
+  File "/testbed/tests/migrations/test_autodetector.py", line 517, in assertOperationTypes
+    self.repr_changes(changes),
+AssertionError: Operation type mismatch for otherapp.auto_1 (expected ['CreateModel', 'AddConstraint']):
+  otherapp:
+    auto_1
+      <AddConstraint  model_name='author', constraint=<CheckConstraint: check='(AND: ('name__contains', 'Bob'))' name='name_contains_bob'>>
+      <CreateModel  name='Author', fields=[('id', <django.db.models.fields.AutoField>), ('name', <django.db.models.fields.CharField>)], options={}, bases=(<class 'django.db.models.base.Model'>,), managers=[]>
+
+
+======================================================================
+FAIL: test_create_model_with_indexes (migrations.test_autodetector.AutodetectorTests)
+Test creation of new model with indexes already defined.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/testbed/tests/migrations/test_autodetector.py", line 1411, in test_create_model_with_indexes
+    self.assertOperationTypes(changes, 'otherapp', 0, ['CreateModel', 'AddIndex'])
+  File "/testbed/tests/migrations/test_autodetector.py", line 517, in assertOperationTypes
+    self.repr_changes(changes),
+AssertionError: Operation type mismatch for otherapp.auto_1 (expected ['CreateModel', 'AddIndex']):
+  otherapp:
+    auto_1
+      <AddIndex  model_name='author', index=<Index: fields='name'>>
+      <CreateModel  name='Author', fields=[('id', <django.db.models.fields.AutoField>), ('name', <django.db.models.fields.CharField>)], options={}, bases=(<class 'django.db.models.base.Model'>,), managers=[]>
+
+
+======================================================================
+FAIL: test_create_with_through_model (migrations.test_autodetector.AutodetectorTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/testbed/tests/migrations/test_autodetector.py", line 1959, in test_create_with_through_model
+    'CreateModel', 'CreateModel', 'CreateModel', 'AddField',
+  File "/testbed/tests/migrations/test_autodetector.py", line 517, in assertOperationTypes
+    self.repr_changes(changes),
+AssertionError: Operation type mismatch for testapp.auto_1 (expected ['CreateModel', 'CreateModel', 'CreateModel', 'AddField']):
+  testapp:
+    auto_1
+      <AddField  model_name='contract', name='author', field=<django.db.models.fields.related.ForeignKey: author>>
+      <AddField  model_name='contract', name='publisher', field=<django.db.models.fields.related.ForeignKey: publisher>>
+      <AddField  model_name='author', name='publishers', field=<django.db.models.fields.related.ManyToManyField: publishers>>
+      <CreateModel  name='Author', fields=[('id', <django.db.models.fields.AutoField>)], options={}, bases=(<class 'django.db.models.base.Model'>,), managers=[]>
+      <CreateModel  name='Contract', fields=[('id', <django.db.models.fields.AutoField>)], options={}, bases=(<class 'django.db.models.base.Model'>,), managers=[]>
+      <CreateModel  name='Publisher', fields=[('id', <django.db.models.fields.AutoField>), ('name', <django.db.models.fields.CharField>)], options={}, bases=(<class 'django.db.models.base.Model'>,), managers=[]>
+
+
+======================================================================
+FAIL: test_first_dependency (migrations.test_autodetector.AutodetectorTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/testbed/tests/migrations/test_autodetector.py", line 2249, in test_first_dependency
+    self.assertOperationTypes(changes, 'otherapp', 0, ["CreateModel"])
+  File "/testbed/tests/migrations/test_autodetector.py", line 517, in assertOperationTypes
+    self.repr_changes(changes),
+AssertionError: Operation type mismatch for otherapp.auto_1 (expected ['CreateModel']):
+  otherapp:
+    auto_1
+      <AddField  model_name='book', name='author', field=<django.db.models.fields.related.ForeignKey: author>>
+      <CreateModel  name='Book', fields=[('id', <django.db.models.fields.AutoField>), ('title', <django.db.models.fields.CharField>)], options={}, bases=(<class 'django.db.models.base.Model'>,), managers=[]>
+
+
+======================================================================
+FAIL: test_fk_dependency (migrations.test_autodetector.AutodetectorTests)
+Having a ForeignKey automatically adds a dependency.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/testbed/tests/migrations/test_autodetector.py", line 1160, in test_fk_dependency
+    self.assertOperationTypes(changes, 'otherapp', 0, ["CreateModel"])
+  File "/testbed/tests/migrations/test_autodetector.py", line 517, in assertOperationTypes
+    self.repr_changes(changes),
+AssertionError: Operation type mismatch for otherapp.auto_1 (expected ['CreateModel']):
+  otherapp:
+    auto_1
+      <AddField  model_name='book', name='author', field=<django.db.models.fields.related.ForeignKey: author>>
+      <CreateModel  name='Book', fields=[('id', <django.db.models.fields.AutoField>), ('title', <django.db.models.fields.CharField>)], options={}, bases=(<class 'django.db.models.base.Model'>,), managers=[]>
+  testapp:
+    auto_1
+      <CreateModel  name='Author', fields=[('id', <django.db.models.fields.AutoField>), ('name', <django.db.models.fields.CharField>)], options={}, bases=(<class 'django.db.models.base.Model'>,), managers=[]>
+  thirdapp:
+    auto_1
+      <AddField  model_name='edition', name='book', field=<django.db.models.fields.related.ForeignKey: book>>
+      <CreateModel  name='Edition', fields=[('id', <django.db.models.fields.AutoField>)], options={}, bases=(<class 'django.db.models.base.Model'>,), managers=[]>
+
+
+======================================================================
+FAIL: test_foreign_key_removed_before_target_model (migrations.test_autodetector.AutodetectorTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/testbed/tests/migrations/test_autodetector.py", line 1927, in test_foreign_key_removed_before_target_model
+    self.assertOperationTypes(changes, 'testapp', 0, ["RemoveField", "DeleteModel"])
+  File "/testbed/tests/migrations/test_autodetector.py", line 517, in assertOperationTypes
+    self.repr_changes(changes),
+AssertionError: Operation type mismatch for testapp.auto_1 (expected ['RemoveField', 'DeleteModel']):
+  testapp:
+    auto_1
+      <DeleteModel  name='Publisher'>
+      <RemoveField  model_name='author', name='publisher'>
+
+
+======================================================================
+FAIL: test_last_dependency (migrations.test_autodetector.AutodetectorTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/testbed/django/test/utils.py", line 381, in inner
+    return func(*args, **kwargs)
+  File "/testbed/tests/migrations/test_autodetector.py", line 2268, in test_last_dependency
+    self.assertOperationTypes(changes, 'otherapp', 0, ["CreateModel"])
+  File "/testbed/tests/migrations/test_autodetector.py", line 517, in assertOperationTypes
+    self.repr_changes(changes),
+AssertionError: Operation type mismatch for otherapp.auto_1 (expected ['CreateModel']):
+  otherapp:
+    auto_1
+      <AddField  model_name='book', name='author', field=<django.db.models.fields.related.ForeignKey: author>>
+      <CreateModel  name='Book', fields=[('id', <django.db.models.fields.AutoField>), ('title', <django.db.models.fields.CharField>)], options={}, bases=(<class 'django.db.models.base.Model'>,), managers=[]>
+
+
+======================================================================
+FAIL: test_m2m_w_through_multistep_remove (migrations.test_autodetector.AutodetectorTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/testbed/tests/migrations/test_autodetector.py", line 2011, in test_m2m_w_through_multistep_remove
+    "RemoveField", "RemoveField", "DeleteModel", "DeleteModel"
+  File "/testbed/tests/migrations/test_autodetector.py", line 517, in assertOperationTypes
+    self.repr_changes(changes),
+AssertionError: Operation type mismatch for testapp.auto_1 (expected ['RemoveField', 'RemoveField', 'DeleteModel', 'DeleteModel']):
+  testapp:
+    auto_1
+      <DeleteModel  name='Author'>
+      <DeleteModel  name='Contract'>
+      <RemoveField  model_name='author', name='publishers'>
+      <RemoveField  model_name='contract', name='author'>
+      <RemoveField  model_name='contract', name='publisher'>
+
+
+======================================================================
+FAIL: test_many_to_many_changed_to_concrete_field (migrations.test_autodetector.AutodetectorTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/testbed/tests/migrations/test_autodetector.py", line 2039, in test_many_to_many_changed_to_concrete_field
+    self.assertOperationTypes(changes, "testapp", 0, ["RemoveField", "AddField", "DeleteModel"])
+  File "/testbed/tests/migrations/test_autodetector.py", line 517, in assertOperationTypes
+    self.repr_changes(changes),
+AssertionError: Operation type mismatch for testapp.auto_1 (expected ['RemoveField', 'AddField', 'DeleteModel']):
+  testapp:
+    auto_1
+      <DeleteModel  name='Publisher'>
+
+
+======================================================================
+FAIL: test_many_to_many_removed_before_through_model (migrations.test_autodetector.AutodetectorTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/testbed/tests/migrations/test_autodetector.py", line 1978, in test_many_to_many_removed_before_through_model
+    self.assertOperationTypes(changes, 'otherapp', 0, ['RemoveField', 'DeleteModel'])
+  File "/testbed/tests/migrations/test_autodetector.py", line 517, in assertOperationTypes
+    self.repr_changes(changes),
+AssertionError: Operation type mismatch for otherapp.auto_1 (expected ['RemoveField', 'DeleteModel']):
+  otherapp:
+    auto_1
+      <DeleteModel  name='Attribution'>
+      <RemoveField  model_name='attribution', name='author'>
+      <RemoveField  model_name='attribution', name='book'>
+      <RemoveField  model_name='book', name='authors'>
+
+
+======================================================================
+FAIL: test_many_to_many_removed_before_through_model_2 (migrations.test_autodetector.AutodetectorTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/testbed/tests/migrations/test_autodetector.py", line 1995, in test_many_to_many_removed_before_through_model_2
+    self.assertOperationTypes(changes, 'otherapp', 0, ['RemoveField', 'DeleteModel', 'DeleteModel'])
+  File "/testbed/tests/migrations/test_autodetector.py", line 517, in assertOperationTypes
+    self.repr_changes(changes),
+AssertionError: Operation type mismatch for otherapp.auto_1 (expected ['RemoveField', 'DeleteModel', 'DeleteModel']):
+  otherapp:
+    auto_1
+      <DeleteModel  name='Attribution'>
+      <DeleteModel  name='Book'>
+      <RemoveField  model_name='attribution', name='author'>
+      <RemoveField  model_name='attribution', name='book'>
+      <RemoveField  model_name='book', name='authors'>
+
+
+======================================================================
+FAIL: test_mti_inheritance_model_removal (migrations.test_autodetector.AutodetectorTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/testbed/tests/migrations/test_autodetector.py", line 2455, in test_mti_inheritance_model_removal
+    self.assertOperationTypes(changes, 'app', 0, ['DeleteModel'])
+  File "/testbed/tests/migrations/test_autodetector.py", line 517, in assertOperationTypes
+    self.repr_changes(changes),
+AssertionError: Operation type mismatch for app.auto_1 (expected ['DeleteModel']):
+  app:
+    auto_1
+      <DeleteModel  name='Dog'>
+      <RemoveField  model_name='dog', name='animal_ptr'>
+
+
+======================================================================
+FAIL: test_non_circular_foreignkey_dependency_removal (migrations.test_autodetector.AutodetectorTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/testbed/tests/migrations/test_autodetector.py", line 2053, in test_non_circular_foreignkey_dependency_removal
+    self.assertOperationTypes(changes, "testapp", 0, ["RemoveField", "DeleteModel", "DeleteModel"])
+  File "/testbed/tests/migrations/test_autodetector.py", line 517, in assertOperationTypes
+    self.repr_changes(changes),
+AssertionError: Operation type mismatch for testapp.auto_1 (expected ['RemoveField', 'DeleteModel', 'DeleteModel']):
+  testapp:
+    auto_1
+      <DeleteModel  name='Author'>
+      <DeleteModel  name='Publisher'>
+      <RemoveField  model_name='author', name='publisher'>
+      <RemoveField  model_name='publisher', name='author'>
+
+
+======================================================================
+FAIL: test_proxy_fk_dependency (migrations.test_autodetector.AutodetectorTests)
+FK dependencies still work on proxy models.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/testbed/tests/migrations/test_autodetector.py", line 1181, in test_proxy_fk_dependency
+    self.assertOperationTypes(changes, 'otherapp', 0, ["CreateModel"])
+  File "/testbed/tests/migrations/test_autodetector.py", line 517, in assertOperationTypes
+    self.repr_changes(changes),
+AssertionError: Operation type mismatch for otherapp.auto_1 (expected ['CreateModel']):
+  otherapp:
+    auto_1
+      <AddField  model_name='book', name='author', field=<django.db.models.fields.related.ForeignKey: author>>
+      <CreateModel  name='Book', fields=[('id', <django.db.models.fields.AutoField>), ('title', <django.db.models.fields.CharField>)], options={}, bases=(<class 'django.db.models.base.Model'>,), managers=[]>
+  testapp:
+    auto_1
+      <CreateModel  name='Author', fields=[('id', <django.db.models.fields.AutoField>)], options={}, bases=(<class 'django.db.models.base.Model'>,), managers=[]>
+  thirdapp:
+    auto_1
+      <CreateModel  name='AuthorProxy', fields=[], options={'proxy': True, 'indexes': [], 'constraints': []}, bases=('testapp.author',), managers=[]>
+
+
+======================================================================
+FAIL: test_replace_string_with_foreignkey (migrations.test_autodetector.AutodetectorTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/testbed/tests/migrations/test_autodetector.py", line 1912, in test_replace_string_with_foreignkey
+    self.assertOperationTypes(changes, 'testapp', 0, ["CreateModel", "RemoveField", "AddField"])
+  File "/testbed/tests/migrations/test_autodetector.py", line 517, in assertOperationTypes
+    self.repr_changes(changes),
+AssertionError: Operation type mismatch for testapp.auto_1 (expected ['CreateModel', 'RemoveField', 'AddField']):
+  testapp:
+    auto_1
+      <AddField  model_name='author', name='publisher', field=<django.db.models.fields.related.ForeignKey>, preserve_default=False>
+      <RemoveField  model_name='author', name='publisher_name'>
+      <CreateModel  name='Publisher', fields=[('id', <django.db.models.fields.AutoField>), ('name', <django.db.models.fields.CharField>)], options={}, bases=(<class 'django.db.models.base.Model'>,), managers=[]>
+
+
+======================================================================
+FAIL: test_same_app_circular_fk_dependency (migrations.test_autodetector.AutodetectorTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/testbed/tests/migrations/test_autodetector.py", line 1233, in test_same_app_circular_fk_dependency
+    self.assertOperationTypes(changes, 'testapp', 0, ["CreateModel", "CreateModel", "AddField"])
+  File "/testbed/tests/migrations/test_autodetector.py", line 517, in assertOperationTypes
+    self.repr_changes(changes),
+AssertionError: Operation type mismatch for testapp.auto_1 (expected ['CreateModel', 'CreateModel', 'AddField']):
+  testapp:
+    auto_1
+      <AddField  model_name='publisher', name='author', field=<django.db.models.fields.related.ForeignKey: author>>
+      <AddField  model_name='author', name='publisher', field=<django.db.models.fields.related.ForeignKey: publisher>>
+      <CreateModel  name='Author', fields=[('id', <django.db.models.fields.AutoField>), ('name', <django.db.models.fields.CharField>)], options={}, bases=(<class 'django.db.models.base.Model'>,), managers=[]>
+      <CreateModel  name='Publisher', fields=[('id', <django.db.models.fields.AutoField>), ('name', <django.db.models.fields.CharField>)], options={}, bases=(<class 'django.db.models.base.Model'>,), managers=[]>
+
+
+======================================================================
+FAIL: test_same_app_circular_fk_dependency_with_unique_together_and_indexes (migrations.test_autodetector.AutodetectorTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/testbed/tests/migrations/test_autodetector.py", line 1249, in test_same_app_circular_fk_dependency_with_unique_together_and_indexes
+    changes, 'eggs', 0, ["CreateModel", "CreateModel", "AddIndex", "AlterUniqueTogether"]
+  File "/testbed/tests/migrations/test_autodetector.py", line 517, in assertOperationTypes
+    self.repr_changes(changes),
+AssertionError: Operation type mismatch for eggs.auto_1 (expected ['CreateModel', 'CreateModel', 'AddIndex', 'AlterUniqueTogether']):
+  eggs:
+    auto_1
+      <AddField  model_name='rabbit', name='knight', field=<django.db.models.fields.related.ForeignKey: knight>>
+      <AddField  model_name='rabbit', name='parent', field=<django.db.models.fields.related.ForeignKey: parent>>
+      <AddIndex  model_name='rabbit', index=<Index: fields='parent, knight'>>
+      <AlterUniqueTogether  name='rabbit', unique_together={('parent', 'knight')}>
+      <CreateModel  name='Knight', fields=[('id', <django.db.models.fields.AutoField>)], options={}, bases=(<class 'django.db.models.base.Model'>,), managers=[]>
+      <CreateModel  name='Rabbit', fields=[('id', <django.db.models.fields.AutoField>)], options={}, bases=(<class 'django.db.models.base.Model'>,), managers=[]>
+
+
+======================================================================Testing against Django installed in '/testbed/django'
+Importing application migrations
+Skipping setup of unused database(s): other.
+Operations to perform:
+  Synchronize unmigrated apps: auth, contenttypes, messages, migrations, sessions, staticfiles
+  Apply all migrations: admin, sites
+Synchronizing apps without migrations:
+  Creating tables...
+    Creating table django_content_type
+    Creating table auth_permission
+    Creating table auth_group
+    Creating table auth_user
+    Creating table django_session
+    Creating table migrations_modelwithcustombase
+    Creating table migrations_unmigratedmodel
+    Running deferred SQL...
+Running migrations:
+  Applying admin.0001_initial... OK
+  Applying admin.0002_logentry_remove_auto_add... OK
+  Applying admin.0003_logentry_add_action_flag_choices... OK
+  Applying sites.0001_initial... OK
+  Applying sites.0002_alter_domain_unique... OK
+System check identified no issues (0 silenced).
+
+FAIL: test_same_app_no_fk_dependency (migrations.test_autodetector.AutodetectorTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/testbed/tests/migrations/test_autodetector.py", line 1198, in test_same_app_no_fk_dependency
+    self.assertOperationTypes(changes, 'testapp', 0, ["CreateModel", "CreateModel"])
+  File "/testbed/tests/migrations/test_autodetector.py", line 517, in assertOperationTypes
+    self.repr_changes(changes),
+AssertionError: Operation type mismatch for testapp.auto_1 (expected ['CreateModel', 'CreateModel']):
+  testapp:
+    auto_1
+      <AddField  model_name='author', name='publisher', field=<django.db.models.fields.related.ForeignKey: publisher>>
+      <CreateModel  name='Author', fields=[('id', <django.db.models.fields.AutoField>), ('name', <django.db.models.fields.CharField>)], options={}, bases=(<class 'django.db.models.base.Model'>,), managers=[]>
+      <CreateModel  name='Publisher', fields=[('id', <django.db.models.fields.AutoField>), ('name', <django.db.models.fields.CharField>)], options={}, bases=(<class 'django.db.models.base.Model'>,), managers=[]>
+
+
+======================================================================
+FAIL: test_swappable (migrations.test_autodetector.AutodetectorTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/testbed/django/test/utils.py", line 381, in inner
+    return func(*args, **kwargs)
+  File "/testbed/tests/migrations/test_autodetector.py", line 1755, in test_swappable
+    self.assertOperationTypes(changes, 'testapp', 0, ["CreateModel"])
+  File "/testbed/tests/migrations/test_autodetector.py", line 517, in assertOperationTypes
+    self.repr_changes(changes),
+AssertionError: Operation type mismatch for testapp.auto_1 (expected ['CreateModel']):
+  testapp:
+    auto_1
+      <AddField  model_name='author', name='user', field=<django.db.models.fields.related.ForeignKey: user>>
+      <CreateModel  name='Author', fields=[('id', <django.db.models.fields.AutoField>), ('name', <django.db.models.fields.CharField>)], options={}, bases=(<class 'django.db.models.base.Model'>,), managers=[]>
+
+
+======================================================================
+FAIL: test_swappable_circular_multi_mti (migrations.test_autodetector.AutodetectorTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/testbed/django/test/utils.py", line 381, in inner
+    return func(*args, **kwargs)
+  File "/testbed/tests/migrations/test_autodetector.py", line 2420, in test_swappable_circular_multi_mti
+    self.assertOperationTypes(changes, 'a', 0, ['CreateModel', 'CreateModel', 'CreateModel', 'AddField'])
+  File "/testbed/tests/migrations/test_autodetector.py", line 517, in assertOperationTypes
+    self.repr_changes(changes),
+AssertionError: Operation type mismatch for a.auto_1 (expected ['CreateModel', 'CreateModel', 'CreateModel', 'AddField']):
+  a:
+    auto_1
+      <AddField  model_name='parent', name='user', field=<django.db.models.fields.related.ForeignKey: user>>
+      <CreateModel  name='Parent', fields=[], options={}, bases=(<class 'django.db.models.base.Model'>,), managers=[]>
+      <CreateModel  name='Child', fields=[], options={}, bases=('a.Parent',), managers=[]>
+      <CreateModel  name='User', fields=[], options={}, bases=(<class 'django.contrib.auth.base_user.AbstractBaseUser'>, 'a.Child'), managers=[]>
+
+
+======================================================================
+FAIL: test_unmanaged_delete (migrations.test_autodetector.AutodetectorTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/testbed/tests/migrations/test_autodetector.py", line 1713, in test_unmanaged_delete
+    self.assertOperationTypes(changes, 'testapp', 0, ['DeleteModel'])
+  File "/testbed/tests/migrations/test_autodetector.py", line 517, in assertOperationTypes
+    self.repr_changes(changes),
+AssertionError: Operation type mismatch for testapp.auto_1 (expected ['DeleteModel']):
+  testapp:
+    auto_1
+      <DeleteModel  name='AuthorUnmanaged'>
+      <RemoveField  model_name='authorunmanaged', name='author_ptr'>
+
+
+----------------------------------------------------------------------
+Ran 116 tests in 0.701s
+
+FAILED (failures=25, errors=9)
+Destroying test database for alias 'default' ('file:memorydb_default?mode=memory&cache=shared')...
++ : '>>>>> End Test Output'
++ git checkout 18759b2209ff556aed7f20d83cbf23e3d234e41c tests/migrations/test_autodetector.py
+Updated 1 path from e43c6ebd35

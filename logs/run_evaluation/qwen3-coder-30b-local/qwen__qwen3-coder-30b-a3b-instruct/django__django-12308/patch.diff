@@ -1,0 +1,24 @@
+diff --git a/django/contrib/admin/utils.py b/django/contrib/admin/utils.py
+index e4ddc8f017..0859fb8e59 100644
+--- a/django/contrib/admin/utils.py
++++ b/django/contrib/admin/utils.py
+@@ -380,6 +380,19 @@ def help_text_for_field(name, model):
+ def display_for_field(value, field, empty_value_display):
+     from django.contrib.admin.templatetags.admin_list import _boolean_icon
+ 
++    # Handle JSONField specially to display valid JSON instead of Python dict
++    try:
++        from django.db.models.fields.json import JSONField
++        if isinstance(field, JSONField):
++            import json
++            if value is None:
++                return empty_value_display
++            # For JSONField, we want to display valid JSON, not Python dict representation
++            return json.dumps(value, ensure_ascii=False)
++    except ImportError:
++        # JSONField not available, continue with normal flow
++        pass
++
+     if getattr(field, 'flatchoices', None):
+         return dict(field.flatchoices).get(value, empty_value_display)
+     # BooleanField needs special-case null-handling, so it comes before the

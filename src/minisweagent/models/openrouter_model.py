@@ -28,6 +28,8 @@ class OpenRouterModelConfig(BaseModel):
     """Set explicit cache control markers, for example for Anthropic models"""
     cost_tracking: Literal["default", "ignore_errors"] = os.getenv("MSWEA_COST_TRACKING", "default")
     """Cost tracking mode for this model. Can be "default" or "ignore_errors" (ignore errors/missing cost info)"""
+    request_logprobs: bool = False
+    """Request per-token logprobs from the API. Only supported by some models."""
     format_error_template: str = "{{ error }}"
     """Template used when the LM's output is not in the expected format."""
     observation_template: str = (
@@ -72,6 +74,9 @@ class OpenRouterModel:
             "usage": {"include": True},
             **(self.config.model_kwargs | kwargs),
         }
+        if self.config.request_logprobs:
+            payload["logprobs"] = True
+            payload["top_logprobs"] = 1
 
         try:
             response = requests.post(self._api_url, headers=headers, data=json.dumps(payload), timeout=60)
@@ -100,12 +105,17 @@ class OpenRouterModel:
         cost_output = self._calculate_cost(response)
         GLOBAL_MODEL_STATS.add(cost_output["cost"])
         message = dict(response["choices"][0]["message"])
-        message["extra"] = {
+        extra = {
             "actions": self._parse_actions(response),
             "response": response,
             **cost_output,
             "timestamp": time.time(),
         }
+        if self.config.request_logprobs:
+            logprobs_data = response["choices"][0].get("logprobs")
+            if logprobs_data:
+                extra["logprobs"] = logprobs_data
+        message["extra"] = extra
         return message
 
     def _calculate_cost(self, response) -> dict[str, float]:

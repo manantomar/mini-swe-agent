@@ -1,0 +1,20 @@
+diff --git a/src/flask/blueprints.py b/src/flask/blueprints.py
+index 0000000..1111111
+--- a/src/flask/blueprints.py
++++ b/src/flask/blueprints.py
+@@ -182,6 +182,8 @@ def __init__(
+         cli_group: t.Optional[str] = _sentinel,  # type: ignore
+     ):
+         super().__init__(
++        if not name:
++            raise ValueError("Blueprint name cannot be empty.")
+         static_folder=static_folder,
+         static_url_path=static_url_path,
+         template_folder=template_folder,
+         root_path=root_path,
+     )
+
+     if "." in name:
+         raise ValueError("'name' may not contain a dot '.' character.")
+
+     self.name = name

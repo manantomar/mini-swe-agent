@@ -1,0 +1,16 @@
+The fix for the Django modelform_factory issue:
+1. The problem: modelform_factory doesn't preserve formfield_callback from base form's Meta class
+2. The solution: Check if formfield_callback is None and inherit from base form if available
+
+The specific change needed in django/forms/models.py in the modelform_factory function:
+Replace:
+    if formfield_callback:
+        Meta.formfield_callback = staticmethod(formfield_callback)
+
+With:
+    # Preserve formfield_callback from base form if not explicitly provided
+    if formfield_callback is not None:
+        Meta.formfield_callback = staticmethod(formfield_callback)
+    elif hasattr(form, "Meta") and hasattr(form.Meta, "formfield_callback"):
+        # Inherit formfield_callback from base form's Meta
+        Meta.formfield_callback = staticmethod(form.Meta.formfield_callback)

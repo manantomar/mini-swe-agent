@@ -1,0 +1,5 @@
+The changes made to django/db/models/query.py:
+1. Added docstring line: 'Return the number of rows matched.'
+2. Added 'total_rows = 0' initialization
+3. Modified the update loop to capture return values and sum them
+4. Added 'return total_rows' at the end

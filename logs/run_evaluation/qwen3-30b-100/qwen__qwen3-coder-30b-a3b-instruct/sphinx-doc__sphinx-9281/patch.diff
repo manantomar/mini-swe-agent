@@ -1,0 +1,21 @@
+diff --git a/sphinx/ext/autodoc/preserve_defaults.py b/sphinx/ext/autodoc/preserve_defaults.py
+index 3d859fe8e..cf85cb8fd 100644
+--- a/sphinx/ext/autodoc/preserve_defaults.py
++++ b/sphinx/ext/autodoc/preserve_defaults.py
+@@ -10,6 +10,7 @@
+ """
+ 
+ import ast
++import enum
+ import inspect
+ from typing import Any, Dict
+ 
+@@ -27,6 +28,8 @@ class DefaultValue:
+         self.name = name
+ 
+     def __repr__(self) -> str:
++        if isinstance(self.name, enum.Enum):
++            return self.name.__class__.__name__ + "." + self.name.name
+         return self.name
+ 
+ 

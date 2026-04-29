@@ -1,0 +1,48 @@
+diff --git a/django/db/migrations/autodetector.py b/django/db/migrations/autodetector.py
+index 30616c0172..aaa132f8b2 100644
+--- a/django/db/migrations/autodetector.py
++++ b/django/db/migrations/autodetector.py
+@@ -192,6 +192,8 @@ class MigrationAutodetector:
+         self.generate_altered_order_with_respect_to()
+ 
+         self._sort_migrations()
++        self._reorder_field_operations_for_inheritance()
++
+         self._build_migration_list(graph)
+         self._optimize_migrations()
+ 
+@@ -334,6 +336,34 @@ class MigrationAutodetector:
+                     raise ValueError("Cannot resolve operation dependencies: %r" % self.generated_operations)
+             num_ops = new_num_ops
+ 
++    def _reorder_field_operations_for_inheritance(self):
++        """
++        Reorder field operations to handle inheritance scenarios properly.
++        """
++        for app_label, ops in self.generated_operations.items():
++            # Create a new list with proper ordering
++            new_ops = []
++            
++            # Separate operations
++            remove_field_ops = []
++            create_model_ops = []
++            other_ops = []
++            
++            for op in ops:
++                if isinstance(op, operations.RemoveField):
++                    remove_field_ops.append(op)
++                elif isinstance(op, operations.CreateModel):
++                    create_model_ops.append(op)
++                else:
++                    other_ops.append(op)
++            
++            # Add operations in proper order: other, remove_field, create_model
++            new_ops.extend(other_ops)
++            new_ops.extend(remove_field_ops)
++            new_ops.extend(create_model_ops)
++            
++            self.generated_operations[app_label] = new_ops
++
+     def _sort_migrations(self):
+         """
+         Reorder to make things possible. Reordering may be needed so FKs work

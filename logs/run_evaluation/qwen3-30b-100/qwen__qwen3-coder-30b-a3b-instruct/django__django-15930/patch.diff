@@ -1,0 +1,42 @@
+diff --git a/django/db/models/expressions.py b/django/db/models/expressions.py
+index 822968ef56..f5162e8595 100644
+--- a/django/db/models/expressions.py
++++ b/django/db/models/expressions.py
+@@ -1377,22 +1377,28 @@ class Case(SQLiteNumericMixin, Expression):
+     def as_sql(
+         self, compiler, connection, template=None, case_joiner=None, **extra_context
+     ):
+-        connection.ops.check_expression_support(self)
+-        if not self.cases:
+-            return compiler.compile(self.default)
+-        template_params = {**self.extra, **extra_context}
+         case_parts = []
+         sql_params = []
++        # Filter out cases with empty or invalid conditions
++        filtered_case_parts = []
++        filtered_sql_params = []
+         for case in self.cases:
+             try:
+                 case_sql, case_params = compiler.compile(case)
++                # Skip cases that would produce invalid SQL like "WHEN  THEN "
++                if case_sql.strip() and "WHEN " in case_sql and " THEN " in case_sql:
++                    # Extract condition part between WHEN and THEN
++                    condition_part = case_sql.split("WHEN ", 1)[1].split(" THEN ", 1)[0]
++                    if condition_part.strip():
++                        filtered_case_parts.append(case_sql)
++                        filtered_sql_params.extend(case_params)
++                elif case_sql.strip():
++                    filtered_case_parts.append(case_sql)
++                    filtered_sql_params.extend(case_params)
+             except EmptyResultSet:
+                 continue
+-            case_parts.append(case_sql)
+-            sql_params.extend(case_params)
+-        default_sql, default_params = compiler.compile(self.default)
+-        if not case_parts:
+-            return default_sql, default_params
++        case_parts = filtered_case_parts
++        sql_params = filtered_sql_params
+         case_joiner = case_joiner or self.case_joiner
+         template_params["cases"] = case_joiner.join(case_parts)
+         template_params["default"] = default_sql

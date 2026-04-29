@@ -1,0 +1,24 @@
+diff --git a/src/_pytest/compat.py b/src/_pytest/compat.py
+index d238061b4..bffad84f0 100644
+--- a/src/_pytest/compat.py
++++ b/src/_pytest/compat.py
+@@ -67,12 +67,14 @@ def num_mock_patch_args(function):
+     mock_modules = [sys.modules.get("mock"), sys.modules.get("unittest.mock")]
+     if any(mock_modules):
+         sentinels = [m.DEFAULT for m in mock_modules if m is not None]
+-        return len(
+-            [p for p in patchings if not p.attribute_name and p.new in sentinels]
+-        )
++        def _is_sentinel(p):
++            try:
++                return p.new in sentinels
++            except ValueError:
++                # This happens with numpy arrays - return False since arrays are not typical sentinels
++                return False
++        return len([p for p in patchings if not p.attribute_name and _is_sentinel(p)])
+     return len(patchings)
+-
+-
+ def getfuncargnames(function, is_method=False, cls=None):
+     """Returns the names of a function's mandatory arguments.
+ 

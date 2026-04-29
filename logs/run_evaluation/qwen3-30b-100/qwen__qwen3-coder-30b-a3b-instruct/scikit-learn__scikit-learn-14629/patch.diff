@@ -1,0 +1,47 @@
+diff --git a/sklearn/model_selection/_validation.py b/sklearn/model_selection/_validation.py
+index 95669a212..2813771c5 100644
+--- a/sklearn/model_selection/_validation.py
++++ b/sklearn/model_selection/_validation.py
+@@ -19,6 +19,7 @@ import numpy as np
+ import scipy.sparse as sp
+ from joblib import Parallel, delayed
+ 
++from ..multioutput import MultiOutputClassifier
+ from ..base import is_classifier, clone
+ from ..utils import (indexable, check_random_state, safe_indexing,
+                      _message_with_time)
+@@ -855,15 +856,28 @@ def _fit_and_predict(estimator, X, y, train, test, verbose, fit_params,
+     predictions = func(X_test)
+     if method in ['decision_function', 'predict_proba', 'predict_log_proba']:
+         if isinstance(predictions, list):
+-            predictions = [_enforce_prediction_order(
+-                estimator.classes_[i_label], predictions[i_label],
+-                n_classes=len(set(y[:, i_label])), method=method)
+-                for i_label in range(len(predictions))]
++            if isinstance(estimator, MultiOutputClassifier):
++                # For MultiOutputClassifier, get classes from each individual estimator
++                predictions = [_enforce_prediction_order(
++                    estimator.estimators_[i_label].classes_, predictions[i_label],
++                    n_classes=len(set(y[:, i_label])), method=method)
++                    for i_label in range(len(predictions))]
++            else:
++                # For other estimators, use the original classes_
++                predictions = [_enforce_prediction_order(
++                    estimator.classes_[i_label], predictions[i_label],
++                    n_classes=len(set(y[:, i_label])), method=method)
++                    for i_label in range(len(predictions))]
+         else:
+             # A 2D y array should be a binary label indicator matrix
+             n_classes = len(set(y)) if y.ndim == 1 else y.shape[1]
+-            predictions = _enforce_prediction_order(
+-                estimator.classes_, predictions, n_classes, method)
++            if isinstance(estimator, MultiOutputClassifier):
++                # For MultiOutputClassifier, we should never reach this branch with predict_proba
++                # since it returns a list, not a single array
++                raise RuntimeError("Unexpected case: MultiOutputClassifier with non-list predictions in predict_proba")
++            else:
++                predictions = _enforce_prediction_order(
++                    estimator.classes_, predictions, n_classes, method)
+     return predictions, test
+ 
+ 

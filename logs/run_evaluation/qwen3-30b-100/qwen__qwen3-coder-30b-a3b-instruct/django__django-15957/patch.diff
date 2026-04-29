@@ -1,0 +1,41 @@
+diff --git a/django/db/models/fields/related_descriptors.py b/django/db/models/fields/related_descriptors.py
+index b192df4fbf..2ca9b547b2 100644
+--- a/django/db/models/fields/related_descriptors.py
++++ b/django/db/models/fields/related_descriptors.py
+@@ -145,7 +145,11 @@ class ForwardManyToOneDescriptor:
+             }
+         else:
+             query = {"%s__in" % self.field.related_query_name(): instances}
+-        queryset = queryset.filter(**query)
++        if queryset.query.is_sliced:
++            # Make a copy of the sliced queryset before filtering
++            queryset = queryset.all().filter(**query)
++        else:
++            queryset = queryset.filter(**query)
+ 
+         # Since we're going to assign directly in the cache,
+         # we must manage the reverse relation cache manually.
+@@ -404,7 +408,11 @@ class ReverseOneToOneDescriptor:
+         instance_attr = self.related.field.get_foreign_related_value
+         instances_dict = {instance_attr(inst): inst for inst in instances}
+         query = {"%s__in" % self.related.field.name: instances}
+-        queryset = queryset.filter(**query)
++        if queryset.query.is_sliced:
++            # Make a copy of the sliced queryset before filtering
++            queryset = queryset.all().filter(**query)
++        else:
++            queryset = queryset.filter(**query)
+ 
+         # Since we're going to assign directly in the cache,
+         # we must manage the reverse relation cache manually.
+@@ -719,6 +727,10 @@ def create_reverse_many_to_one_manager(superclass, rel):
+             instance_attr = self.field.get_foreign_related_value
+             instances_dict = {instance_attr(inst): inst for inst in instances}
+             query = {"%s__in" % self.field.name: instances}
++        if queryset.query.is_sliced:
++            # Make a copy of the sliced queryset before filtering
++            queryset = queryset.all().filter(**query)
++        else:
+             queryset = queryset.filter(**query)
+ 
+             # Since we just bypassed this class' get_queryset(), we must manage

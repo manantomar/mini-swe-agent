@@ -1,0 +1,5 @@
+--- a/doc/glossary.rst
++++ b/doc/glossary.rst
+@@ -243,2 +243,0 @@
+-   mysql
+-      The command-line client program for MySQL.

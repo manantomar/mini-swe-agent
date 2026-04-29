@@ -1,0 +1,29 @@
+diff --git a/sphinx/builders/linkcheck.py b/sphinx/builders/linkcheck.py
+index dd5317087..449d5679c 100644
+--- a/sphinx/builders/linkcheck.py
++++ b/sphinx/builders/linkcheck.py
+@@ -1,4 +1,6 @@
+ """
++import os
++
+     sphinx.builders.linkcheck
+     ~~~~~~~~~~~~~~~~~~~~~~~~~
+ 
+@@ -213,7 +215,16 @@ class CheckExternalLinksBuilder(Builder):
+             if len(uri) == 0 or uri.startswith(('#', 'mailto:', 'ftp:')):
+                 return 'unchecked', '', 0
+             elif not uri.startswith(('http:', 'https:')):
+-                return 'local', '', 0
++                # Check if this is a local file path
++                if uri.startswith(("/", "./", "../")):
++                    # This is a local file path - check if it exists
++                    try:
++                        abs_path = os.path.abspath(os.path.join(self.env.srcdir, uri))
++                        if not os.path.exists(abs_path):
++                            return "broken", "file not found", 0
++                    except Exception:
++                        return "broken", "file not found", 0
++                return "local", "", 0
+             elif uri in self.good:
+                 return 'working', 'old', 0
+             elif uri in self.broken:

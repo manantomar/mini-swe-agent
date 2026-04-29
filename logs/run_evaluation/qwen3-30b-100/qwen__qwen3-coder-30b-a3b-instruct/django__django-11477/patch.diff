@@ -1,0 +1,27 @@
+diff --git a/django/urls/base.py b/django/urls/base.py
+index 0e1c3d909c..2a893ab8c5 100644
+--- a/django/urls/base.py
++++ b/django/urls/base.py
+@@ -165,16 +165,18 @@ def translate_url(url, lang_code):
+     """
+     parsed = urlsplit(url)
+     try:
+-        match = resolve(parsed.path)
+-    except Resolver404:
+-        pass
+     else:
+         to_be_reversed = "%s:%s" % (match.namespace, match.url_name) if match.namespace else match.url_name
+         with override(lang_code):
+             try:
++                # Try with the original kwargs first
+                 url = reverse(to_be_reversed, args=match.args, kwargs=match.kwargs)
+             except NoReverseMatch:
+-                pass
++                # If that fails due to optional groups or other issues, try without kwargs
++                try:
++                    url = reverse(to_be_reversed, args=match.args)
++                except NoReverseMatch:
++                    pass
+             else:
+                 url = urlunsplit((parsed.scheme, parsed.netloc, url, parsed.query, parsed.fragment))
+     return url

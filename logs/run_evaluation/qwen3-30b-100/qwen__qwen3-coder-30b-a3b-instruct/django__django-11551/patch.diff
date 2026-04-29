@@ -1,0 +1,13 @@
+Fix for admin.E108 error with fields accessible only via instance
+================================================
+
+The issue was in django/contrib/admin/checks.py in the _check_list_display_item method.
+
+Problem: The method was checking hasattr(obj.model, item) before trying to get the field via obj.model._meta.get_field(item).
+This caused PositionField and similar descriptors to fail validation because they raise AttributeError when accessed on the class.
+
+Solution: Changed the logic to:
+1. Try obj.model._meta.get_field(item) first
+2. If FieldDoesNotExist, try getattr(obj.model, item)
+3. If both fail, return E108 error
+4. If either succeeds, check if it's a ManyToManyField
