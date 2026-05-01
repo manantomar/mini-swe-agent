@@ -54,7 +54,7 @@ EVAL_TASKS = [
 N_ROLLOUTS = 8
 STEP_LIMIT = 50
 N_SFT_STEPS = 1
-N_PPO_STEPS = 10
+N_PPO_STEPS = 3
 EVAL_ROLLOUTS = 4
 BATCH_SIZE = 128
 MAX_SUBSTEPS = 5
@@ -68,33 +68,57 @@ V1_SFT_000 = Path("/data/manantomar/swe-bench-docker/training-loop/sft-000")
 def _eval_one_rollout(rollout_dir: Path) -> tuple[str, set[str], dict]:
     preds_path = rollout_dir / "preds.json"
     if not preds_path.exists():
+        logger.warning(f"    {rollout_dir.name}: no preds.json")
         return rollout_dir.name, set(), {}
     preds = json.loads(preds_path.read_text())
     ids_with_patches = [k for k, v in preds.items() if v.get("model_patch", "").strip()]
     resolved_ids: set[str] = set()
-    if ids_with_patches:
-        filtered_path = rollout_dir / "filtered_preds.jsonl"
-        with open(filtered_path, "w") as f:
-            for k in ids_with_patches:
-                f.write(json.dumps({
-                    "instance_id": k, "model_name_or_path": "tloop",
-                    "model_patch": preds[k]["model_patch"],
-                }) + "\n")
-        subprocess.run(
-            ["python3", "-m", "swebench.harness.run_evaluation",
-             "--dataset_name", "princeton-nlp/SWE-bench_Verified",
-             "--split", "test", "--predictions_path", str(filtered_path),
-             "--run_id", f"{rollout_dir.parent.name}-{rollout_dir.name}",
-             "--max_workers", "16", "--timeout", "300"],
-            capture_output=True, text=True, env=os.environ, timeout=600,
-        )
-        for rf in Path(".").glob(f"*{rollout_dir.name}*.json"):
-            try:
-                r = json.loads(rf.read_text())
-                resolved_ids.update(r.get("resolved_ids", []))
-            except Exception:
-                pass
-            rf.unlink(missing_ok=True)
+    if not ids_with_patches:
+        logger.info(f"    {rollout_dir.name}: {len(preds)} tasks, 0 patches, 0 resolved")
+        return rollout_dir.name, resolved_ids, preds
+
+    filtered_path = rollout_dir / "filtered_preds.jsonl"
+    with open(filtered_path, "w") as f:
+        for k in ids_with_patches:
+            f.write(json.dumps({
+                "instance_id": k, "model_name_or_path": "tloop",
+                "model_patch": preds[k]["model_patch"],
+            }) + "\n")
+    run_id = f"{rollout_dir.parent.name}-{rollout_dir.name}"
+    result = subprocess.run(
+        ["python3", "-m", "swebench.harness.run_evaluation",
+         "--dataset_name", "princeton-nlp/SWE-bench_Verified",
+         "--split", "test", "--predictions_path", str(filtered_path),
+         "--run_id", run_id,
+         "--max_workers", "16", "--timeout", "300"],
+        capture_output=True, text=True, env=os.environ, timeout=600,
+    )
+    if result.returncode != 0:
+        logger.warning(f"    {rollout_dir.name}: swebench eval returned {result.returncode}: {result.stderr[-200:]}")
+
+    # Read per-instance reports from deterministic logs path
+    report_dir = Path(f"logs/run_evaluation/{run_id}/tloop")
+    n_reports = 0
+    if report_dir.exists():
+        for task_dir in report_dir.iterdir():
+            report_file = task_dir / "report.json"
+            if report_file.exists():
+                try:
+                    r = json.loads(report_file.read_text())
+                    n_reports += 1
+                    for tid, info in r.items():
+                        if info.get("resolved"):
+                            resolved_ids.add(tid)
+                except Exception as e:
+                    logger.warning(f"    {rollout_dir.name}: bad report {report_file}: {e}")
+    else:
+        logger.warning(f"    {rollout_dir.name}: no report dir at {report_dir}")
+
+    logger.info(f"    {rollout_dir.name}: {len(preds)} tasks, {len(ids_with_patches)} patches, "
+                f"{len(resolved_ids)} resolved, {n_reports} reports read")
+    # Clean up summary report from CWD
+    for rf in Path(".").glob(f"{run_id}*.json"):
+        rf.unlink(missing_ok=True)
     return rollout_dir.name, resolved_ids, preds
 
 
