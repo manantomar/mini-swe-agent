@@ -1,8 +1,0 @@
-=== FINAL PATCH ===
-File: sympy/printing/pretty/pretty_symbology.py
-Line 185 changed from:
-for gl in ['beta', 'gamma', 'rho', 'phi', 'chi']:
-to:
-for gl in ['beta', 'gamma', 'rho', 'phi', 'chi', 'omega']:
-
-This fix ensures that Greek letters like omega support subscripts properly, resolving the issue where omega_0 was not being displayed as ω₀.

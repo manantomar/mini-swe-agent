@@ -342,7 +342,7 @@ def main():
         batch = datums[batch_start:batch_start + BATCH_SIZE]
         batch_end = min(batch_start + BATCH_SIZE, len(datums))
         logger.info(f"forward_backward batch [{batch_start}:{batch_end}] ({len(batch)} datums)...")
-        fwd_bwd_future = training_client.forward_backward(batch, loss_fn="importance_sampling")
+        fwd_bwd_future = training_client.forward_backward(batch, loss_fn="ppo")
         fwd_bwd_result = fwd_bwd_future.result()
         logger.info(f"  batch done, loss={fwd_bwd_result.metrics.get('loss:sum', '?')}")
 

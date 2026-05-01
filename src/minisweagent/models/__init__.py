@@ -85,6 +85,8 @@ _MODEL_CLASS_MAPPING = {
     "portkey": "minisweagent.models.portkey_model.PortkeyModel",
     "portkey_response": "minisweagent.models.portkey_response_model.PortkeyResponseAPIModel",
     "requesty": "minisweagent.models.requesty_model.RequestyModel",
+    "tinker": "minisweagent.models.tinker_model.TinkerModel",
+    "vllm": "minisweagent.models.vllm_model.VllmModel",
     "deterministic": "minisweagent.models.test_models.DeterministicModel",
 }
 
