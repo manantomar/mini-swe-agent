@@ -57,10 +57,17 @@ N_SFT_STEPS = 1
 N_PPO_STEPS = 6
 EVAL_ROLLOUTS = 8
 BATCH_SIZE = 128
-MAX_SUBSTEPS = 2
+MAX_SUBSTEPS = 8  # ~800 datums / 128 = ~6 substeps, cap at 8
+TASKS_PER_GRPO_STEP = 4
 
 # Pre-collected step-0 data from v1 run (base model, same for everyone)
 V1_SFT_000 = Path("/data/manantomar/swe-bench-docker/training-loop/sft-000")
+
+
+def sample_grpo_tasks(step: int) -> list[str]:
+    """Sample TASKS_PER_GRPO_STEP tasks from SOLVABLE_TASKS, different each step."""
+    rng = np.random.RandomState(seed=step * 7 + 42)
+    return list(rng.choice(SOLVABLE_TASKS, size=TASKS_PER_GRPO_STEP, replace=False))
 
 
 # ── Generation + streaming eval ────────────────────────────────────────────
@@ -467,10 +474,12 @@ def main():
             step_name = f"ppo-{step:03d}"
             step_dir = BASE_DIR / step_name
             step_limit = min(100, STEP_LIMIT + step * 10)
-            logger.info(f"\n{'═'*50}\n  GRPO {step}/{N_PPO_STEPS} ({len(SOLVABLE_TASKS)} tasks, {step_limit} steps)\n{'═'*50}")
+            tasks = sample_grpo_tasks(step)
+            logger.info(f"\n{'═'*50}\n  GRPO {step}/{N_PPO_STEPS} ({len(tasks)} tasks, {step_limit} steps)\n{'═'*50}")
+            logger.info(f"  tasks: {tasks}")
             t0 = time.time()
 
-            rewards = generate_and_eval(SOLVABLE_TASKS, N_ROLLOUTS, step_dir, state["sampler_path"],
+            rewards = generate_and_eval(tasks, N_ROLLOUTS, step_dir, state["sampler_path"],
                                         step_limit=step_limit)
             datums = collect_ppo_datums(step_dir, rewards)
 
