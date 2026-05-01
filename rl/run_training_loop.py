@@ -29,17 +29,17 @@ logging.basicConfig(
 logger = logging.getLogger("training_loop")
 
 BASE_MODEL = "Qwen/Qwen3-8B"
-BASE_DIR = Path("/data/manantomar/swe-bench-docker/training-loop-v2")
-SFT_LR = 1e-4
-PPO_LR = 1e-5
+BASE_DIR = Path("/data/manantomar/swe-bench-docker/training-loop-v3")
+SFT_LR = 5e-5
+PPO_LR = 5e-6
 LORA_RANK = 64
 
-# 13 known solvable tasks — used for both SFT (v1 data) and GRPO
+# 10 tasks with consistent GRPO signal (dropped 3 dead-weight 0% tasks)
 SOLVABLE_TASKS = [
-    "django__django-11119", "django__django-14373", "django__django-15741",
+    "django__django-11119", "django__django-14373",
     "django__django-16139", "django__django-16255", "django__django-16569",
-    "django__django-17029", "matplotlib__matplotlib-20859",
-    "pytest-dev__pytest-5809", "pytest-dev__pytest-6202",
+    "django__django-17029",
+    "pytest-dev__pytest-5809",
     "pytest-dev__pytest-7982", "scikit-learn__scikit-learn-14496",
     "sympy__sympy-16886",
 ]
@@ -51,13 +51,13 @@ EVAL_TASKS = [
     "sphinx-doc__sphinx-9711", "sympy__sympy-20916",
 ]
 
-N_ROLLOUTS = 8
+N_ROLLOUTS = 10
 STEP_LIMIT = 50
 N_SFT_STEPS = 1
-N_PPO_STEPS = 3
-EVAL_ROLLOUTS = 4
+N_PPO_STEPS = 6
+EVAL_ROLLOUTS = 8
 BATCH_SIZE = 128
-MAX_SUBSTEPS = 5
+MAX_SUBSTEPS = 2
 
 # Pre-collected step-0 data from v1 run (base model, same for everyone)
 V1_SFT_000 = Path("/data/manantomar/swe-bench-docker/training-loop/sft-000")
@@ -124,6 +124,7 @@ def _eval_one_rollout(rollout_dir: Path) -> tuple[str, set[str], dict]:
 
 def generate_and_eval(
     tasks: list[str], n_rollouts: int, out_dir: Path, checkpoint_path: str = "",
+    step_limit: int = STEP_LIMIT,
 ) -> dict[str, list[float]]:
     """Generate all rollouts in parallel, stream eval as each finishes."""
     task_filter = "^(" + "|".join(tasks) + ")$"
@@ -143,7 +144,7 @@ def generate_and_eval(
             "--filter", task_filter, "-m", BASE_MODEL, "--model-class", "tinker",
             "-o", str(rdir), "-w", str(len(tasks)),
             "-c", "swebench.yaml",
-            "-c", f"agent.step_limit={STEP_LIMIT}", "-c", "agent.cost_limit=100",
+            "-c", f"agent.step_limit={step_limit}", "-c", "agent.cost_limit=100",
             "-c", "model.cost_tracking=ignore_errors",
             "-c", "model.model_kwargs.temperature=0.7",
             "-c", "environment.pull_timeout=300",
@@ -465,10 +466,12 @@ def main():
             state["step"] = step
             step_name = f"ppo-{step:03d}"
             step_dir = BASE_DIR / step_name
-            logger.info(f"\n{'═'*50}\n  GRPO {step}/{N_PPO_STEPS} ({len(SOLVABLE_TASKS)} tasks)\n{'═'*50}")
+            step_limit = min(100, STEP_LIMIT + step * 10)
+            logger.info(f"\n{'═'*50}\n  GRPO {step}/{N_PPO_STEPS} ({len(SOLVABLE_TASKS)} tasks, {step_limit} steps)\n{'═'*50}")
             t0 = time.time()
 
-            rewards = generate_and_eval(SOLVABLE_TASKS, N_ROLLOUTS, step_dir, state["sampler_path"])
+            rewards = generate_and_eval(SOLVABLE_TASKS, N_ROLLOUTS, step_dir, state["sampler_path"],
+                                        step_limit=step_limit)
             datums = collect_ppo_datums(step_dir, rewards)
 
             if not datums:
