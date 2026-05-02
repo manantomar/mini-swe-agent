@@ -29,19 +29,21 @@ logging.basicConfig(
 logger = logging.getLogger("training_loop")
 
 BASE_MODEL = "Qwen/Qwen3-8B"
-BASE_DIR = Path("/data/manantomar/swe-bench-docker/training-loop-v3")
+BASE_DIR = Path("/data/manantomar/swe-bench-docker/training-loop-v4")
 SFT_LR = 5e-5
 PPO_LR = 5e-6
 LORA_RANK = 64
 
-# 10 tasks with consistent GRPO signal (dropped 3 dead-weight 0% tasks)
+# 16 tasks: 13 original solvable + 3 new for diversity
 SOLVABLE_TASKS = [
-    "django__django-11119", "django__django-14373",
+    "django__django-11119", "django__django-14373", "django__django-15741",
     "django__django-16139", "django__django-16255", "django__django-16569",
-    "django__django-17029",
-    "pytest-dev__pytest-5809",
+    "django__django-17029", "matplotlib__matplotlib-20859",
+    "pytest-dev__pytest-5809", "pytest-dev__pytest-6202",
     "pytest-dev__pytest-7982", "scikit-learn__scikit-learn-14496",
     "sympy__sympy-16886",
+    # 3 new unscreened for diversity
+    "pytest-dev__pytest-7521", "sphinx-doc__sphinx-8269", "django__django-11163",
 ]
 
 EVAL_TASKS = [
@@ -51,23 +53,17 @@ EVAL_TASKS = [
     "sphinx-doc__sphinx-9711", "sympy__sympy-20916",
 ]
 
-N_ROLLOUTS = 10
+N_ROLLOUTS = 8
 STEP_LIMIT = 50
 N_SFT_STEPS = 1
-N_PPO_STEPS = 6
+N_PPO_STEPS = 20
 EVAL_ROLLOUTS = 8
 BATCH_SIZE = 128
-MAX_SUBSTEPS = 8  # ~800 datums / 128 = ~6 substeps, cap at 8
-TASKS_PER_GRPO_STEP = 4
+SFT_SUBSTEPS = 4
+PPO_SUBSTEPS = 2
 
 # Pre-collected step-0 data from v1 run (base model, same for everyone)
 V1_SFT_000 = Path("/data/manantomar/swe-bench-docker/training-loop/sft-000")
-
-
-def sample_grpo_tasks(step: int) -> list[str]:
-    """Sample TASKS_PER_GRPO_STEP tasks from SOLVABLE_TASKS, different each step."""
-    rng = np.random.RandomState(seed=step * 7 + 42)
-    return list(rng.choice(SOLVABLE_TASKS, size=TASKS_PER_GRPO_STEP, replace=False))
 
 
 # ── Generation + streaming eval ────────────────────────────────────────────
@@ -91,7 +87,7 @@ def _eval_one_rollout(rollout_dir: Path) -> tuple[str, set[str], dict]:
                 "instance_id": k, "model_name_or_path": "tloop",
                 "model_patch": preds[k]["model_patch"],
             }) + "\n")
-    run_id = f"{rollout_dir.parent.name}-{rollout_dir.name}"
+    run_id = f"{BASE_DIR.name}-{rollout_dir.parent.name}-{rollout_dir.name}"
     result = subprocess.run(
         ["python3", "-m", "swebench.harness.run_evaluation",
          "--dataset_name", "princeton-nlp/SWE-bench_Verified",
@@ -368,8 +364,7 @@ def run_sft_step(datums: list[dict], checkpoint_path: str, step_name: str) -> tu
     tinker_datums = [_datum_to_tinker_sft(d) for d in balanced]
 
     np.random.shuffle(tinker_datums)
-    n_substeps = min(MAX_SUBSTEPS, max(1, (len(tinker_datums) + BATCH_SIZE - 1) // BATCH_SIZE))
-    for sub in range(n_substeps):
+    for sub in range(SFT_SUBSTEPS):
         batch = tinker_datums[sub * BATCH_SIZE:(sub + 1) * BATCH_SIZE]
         if not batch:
             break
@@ -380,7 +375,7 @@ def run_sft_step(datums: list[dict], checkpoint_path: str, step_name: str) -> tu
 
     ckpt = tc.save_state(name=step_name).result().path
     sampler_path = tc.save_weights_for_sampler(name=f"{step_name}-sampler").result().path
-    logger.info(f"  train done: {n_substeps} substeps, {len(tinker_datums)} datums")
+    logger.info(f"  train done: {SFT_SUBSTEPS} substeps, {len(tinker_datums)} total datums")
     return ckpt, sampler_path
 
 
@@ -395,8 +390,7 @@ def run_ppo_step(datums: list[dict], checkpoint_path: str, step_name: str) -> tu
     tinker_datums = [_datum_to_tinker_ppo(d) for d in datums]
 
     np.random.shuffle(tinker_datums)
-    n_substeps = min(MAX_SUBSTEPS, max(1, (len(tinker_datums) + BATCH_SIZE - 1) // BATCH_SIZE))
-    for sub in range(n_substeps):
+    for sub in range(PPO_SUBSTEPS):
         batch = tinker_datums[sub * BATCH_SIZE:(sub + 1) * BATCH_SIZE]
         if not batch:
             break
@@ -408,7 +402,7 @@ def run_ppo_step(datums: list[dict], checkpoint_path: str, step_name: str) -> tu
 
     ckpt = tc.save_state(name=step_name).result().path
     sampler_path = tc.save_weights_for_sampler(name=f"{step_name}-sampler").result().path
-    logger.info(f"  train done: {n_substeps} substeps, {len(tinker_datums)} datums")
+    logger.info(f"  train done: {PPO_SUBSTEPS} substeps, {len(tinker_datums)} total datums")
     return ckpt, sampler_path
 
 
@@ -474,12 +468,10 @@ def main():
             step_name = f"ppo-{step:03d}"
             step_dir = BASE_DIR / step_name
             step_limit = min(100, STEP_LIMIT + step * 10)
-            tasks = sample_grpo_tasks(step)
-            logger.info(f"\n{'═'*50}\n  GRPO {step}/{N_PPO_STEPS} ({len(tasks)} tasks, {step_limit} steps)\n{'═'*50}")
-            logger.info(f"  tasks: {tasks}")
+            logger.info(f"\n{'═'*50}\n  GRPO {step}/{N_PPO_STEPS} ({len(SOLVABLE_TASKS)} tasks, {step_limit} steps)\n{'═'*50}")
             t0 = time.time()
 
-            rewards = generate_and_eval(tasks, N_ROLLOUTS, step_dir, state["sampler_path"],
+            rewards = generate_and_eval(SOLVABLE_TASKS, N_ROLLOUTS, step_dir, state["sampler_path"],
                                         step_limit=step_limit)
             datums = collect_ppo_datums(step_dir, rewards)
 
