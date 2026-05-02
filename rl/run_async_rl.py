@@ -14,7 +14,7 @@ Usage:
     python rl/run_async_rl.py
 """
 
-import json, logging, os, subprocess, sys, time
+import json, logging, os, subprocess, sys, time, threading
 from collections import defaultdict
 from difflib import SequenceMatcher
 from pathlib import Path
@@ -100,6 +100,73 @@ def get_reward(rdir, task):
     return SequenceMatcher(None, patch, GOLD_PATCHES.get(task, "")).ratio() if patch else 0.0
 
 
+# Shared dict for async swebench eval results: uid -> True/False/None(pending)
+_swebench_results: dict[str, bool | None] = {}
+_swebench_lock = threading.Lock()
+_eval_uid_counter = 0
+
+
+def _run_swebench_eval_bg(uid: str, rdir: Path, task: str):
+    """Run swebench eval in background thread, update _swebench_results."""
+    try:
+        preds = json.loads((rdir / "preds.json").read_text())
+        patch = preds.get(task, {}).get("model_patch", "").strip()
+        if not patch:
+            with _swebench_lock:
+                _swebench_results[uid] = False
+            return
+
+        filtered = rdir / "swebench_preds.jsonl"
+        with open(filtered, "w") as f:
+            f.write(json.dumps({"instance_id": task, "model_name_or_path": "asyncrl",
+                                "model_patch": patch}) + "\n")
+
+        global _eval_uid_counter
+        _eval_uid_counter += 1
+        run_id = f"asyncrl-{_eval_uid_counter:05d}"
+
+        subprocess.run(
+            ["python3", "-m", "swebench.harness.run_evaluation",
+             "--dataset_name", "princeton-nlp/SWE-bench_Verified",
+             "--split", "test", "--predictions_path", str(filtered),
+             "--run_id", run_id, "--max_workers", "4", "--timeout", "300"],
+            capture_output=True, text=True, env=os.environ, timeout=600,
+        )
+
+        resolved = False
+        report_dir = Path(f"logs/run_evaluation/{run_id}/asyncrl")
+        if report_dir.exists():
+            for td in report_dir.iterdir():
+                rf = td / "report.json"
+                if rf.exists():
+                    r = json.loads(rf.read_text())
+                    for tid, info in r.items():
+                        if info.get("resolved"):
+                            resolved = True
+
+        with _swebench_lock:
+            _swebench_results[uid] = resolved
+        if resolved:
+            logger.info(f"    ✓ RESOLVED: {task.split('__')[1]} ({uid})")
+    except Exception as e:
+        with _swebench_lock:
+            _swebench_results[uid] = False
+
+
+def start_swebench_eval(uid: str, rdir: Path, task: str):
+    """Fire off swebench eval in background thread."""
+    with _swebench_lock:
+        _swebench_results[uid] = None  # pending
+    t = threading.Thread(target=_run_swebench_eval_bg, args=(uid, rdir, task), daemon=True)
+    t.start()
+
+
+def get_swebench_result(uid: str) -> bool | None:
+    """Get swebench result: True=resolved, False=not, None=pending."""
+    with _swebench_lock:
+        return _swebench_results.get(uid)
+
+
 def _tok():
     if not hasattr(_tok, "_t"):
         from transformers import AutoTokenizer
@@ -157,7 +224,7 @@ def do_train(datums, ckpt, name):
     for sub in range(n_substeps):
         batch = td[sub * BATCH_SIZE:(sub + 1) * BATCH_SIZE]
         if not batch: break
-        fb = tc.forward_backward(batch, loss_fn="ppo", loss_fn_config={"clip_low_threshold": 0.8, "clip_high_threshold": 1.7}).result()
+        fb = tc.forward_backward(batch, loss_fn="ppo", loss_fn_config={"clip_low_threshold": 0.8, "clip_high_threshold": 1.3}).result()
         loss = fb.metrics.get("loss:sum", 0) / len(batch)
         losses.append(loss)
         tc.optim_step(adam).result()
@@ -271,6 +338,9 @@ def main():
                 pool.append({"uid": uid, "task": r["task"], "rdir": r["rdir"],
                              "reward": rw, "gen_step": ppo_step, "used": False})
                 cur.update(r["task"], [rw])
+                # Fire swebench eval in background if patch exists
+                if rw > 0.05:
+                    start_swebench_eval(uid, r["rdir"], r["task"])
                 del active[uid]; freed += 1
             elif now - r["t0"] > ROLLOUT_TIMEOUT:
                 try: r["proc"].terminate()
@@ -298,6 +368,16 @@ def main():
         if len(eligible) >= MIN_TASKS:
             logger.info(f"\n{'='*50}\n  GRPO {ppo_step}/{N_STEPS} — {len(eligible)} tasks ready\n{'='*50}")
             logger.info(f"  {cur.summary()}")
+
+            # Upgrade rewards with swebench results before building datums
+            n_resolved = 0
+            for r in pool:
+                result = get_swebench_result(r["uid"])
+                if result is True:
+                    r["reward"] = 1.0
+                    n_resolved += 1
+            if n_resolved:
+                logger.info(f"  {n_resolved} rollouts upgraded to reward=1.0 (swebench resolved)")
 
             # Build datums
             datums = []
