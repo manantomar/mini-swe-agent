@@ -241,7 +241,7 @@ def update_plots(base_dir):
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
 
-    steps, avg_rewards, n_datums, pos_fracs, losses = [], [], [], [], []
+    steps, avg_rewards, n_datums, pos_fracs, losses, patch_rates, n_resolved = [], [], [], [], [], [], []
     for f in sorted(base_dir.glob("step_*.json")):
         r = json.loads(f.read_text())
         steps.append(r["step"])
@@ -249,43 +249,72 @@ def update_plots(base_dir):
         n_datums.append(r.get("datums", 0))
         pos_fracs.append(r.get("pos_frac", 0))
         losses.append(r.get("losses", []))
+        patch_rates.append(r.get("patch_rate", 0))
+        n_resolved.append(r.get("n_resolved", 0))
 
     if len(steps) < 2:
         return
 
-    fig, axes = plt.subplots(2, 2, figsize=(14, 8))
-    fig.suptitle("Async RL Training Progress", fontsize=14)
+    # Style matching pass@k curves
+    plt.rcParams.update({"font.size": 11, "axes.spines.top": False, "axes.spines.right": False})
+    fig, axes = plt.subplots(2, 3, figsize=(18, 9))
+    fig.suptitle("Async RL Training Progress", fontsize=16, fontweight="bold", y=0.98)
+    colors = ["#2196F3", "#4CAF50", "#FF5722", "#9C27B0", "#FF9800", "#009688"]
 
-    axes[0, 0].plot(steps, avg_rewards, "b.-")
-    axes[0, 0].set_title("Avg Patch Similarity Reward")
+    # 1. Avg patch similarity reward
+    axes[0, 0].fill_between(steps, avg_rewards, alpha=0.15, color=colors[0])
+    axes[0, 0].plot(steps, avg_rewards, "o-", color=colors[0], markersize=4, linewidth=2)
+    axes[0, 0].set_title("Avg Patch Similarity", fontweight="bold")
     axes[0, 0].set_xlabel("PPO Step")
-    axes[0, 0].grid(True, alpha=0.3)
+    axes[0, 0].set_ylim(bottom=0)
+    axes[0, 0].grid(True, alpha=0.2, linestyle="--")
 
-    axes[0, 1].plot(steps, n_datums, "g.-")
-    axes[0, 1].set_title("Datums per Step")
+    # 2. Patch submission rate
+    axes[0, 1].fill_between(steps, patch_rates, alpha=0.15, color=colors[1])
+    axes[0, 1].plot(steps, patch_rates, "o-", color=colors[1], markersize=4, linewidth=2)
+    axes[0, 1].set_title("Patch Submission Rate", fontweight="bold")
     axes[0, 1].set_xlabel("PPO Step")
-    axes[0, 1].grid(True, alpha=0.3)
+    axes[0, 1].set_ylim(0, 1)
+    axes[0, 1].yaxis.set_major_formatter(plt.FuncFormatter(lambda y, _: f"{y:.0%}"))
+    axes[0, 1].grid(True, alpha=0.2, linestyle="--")
 
-    axes[1, 0].plot(steps, pos_fracs, "r.-")
-    axes[1, 0].set_title("Positive Datum Fraction")
+    # 3. Swebench resolved count
+    axes[0, 2].bar(steps, n_resolved, color=colors[5], alpha=0.7, width=0.8)
+    axes[0, 2].set_title("Swebench Resolved (per step)", fontweight="bold")
+    axes[0, 2].set_xlabel("PPO Step")
+    axes[0, 2].grid(True, alpha=0.2, linestyle="--", axis="y")
+
+    # 4. Datums per step
+    axes[1, 0].fill_between(steps, n_datums, alpha=0.15, color=colors[3])
+    axes[1, 0].plot(steps, n_datums, "o-", color=colors[3], markersize=4, linewidth=2)
+    axes[1, 0].set_title("Datums per Step", fontweight="bold")
     axes[1, 0].set_xlabel("PPO Step")
-    axes[1, 0].set_ylim(0, 1)
-    axes[1, 0].grid(True, alpha=0.3)
+    axes[1, 0].grid(True, alpha=0.2, linestyle="--")
 
-    # Flatten all losses
+    # 5. Positive datum fraction
+    axes[1, 1].fill_between(steps, pos_fracs, alpha=0.15, color=colors[2])
+    axes[1, 1].plot(steps, pos_fracs, "o-", color=colors[2], markersize=4, linewidth=2)
+    axes[1, 1].set_title("Positive Datum Fraction", fontweight="bold")
+    axes[1, 1].set_xlabel("PPO Step")
+    axes[1, 1].set_ylim(0, 1)
+    axes[1, 1].yaxis.set_major_formatter(plt.FuncFormatter(lambda y, _: f"{y:.0%}"))
+    axes[1, 1].grid(True, alpha=0.2, linestyle="--")
+
+    # 6. PPO loss per substep
     all_losses = []
     for step, ls in zip(steps, losses):
         for l in ls:
             all_losses.append((step, l))
     if all_losses:
         xs, ys = zip(*all_losses)
-        axes[1, 1].scatter(xs, ys, s=10, alpha=0.5)
-        axes[1, 1].set_title("PPO Loss (per substep)")
-        axes[1, 1].set_xlabel("PPO Step")
-        axes[1, 1].grid(True, alpha=0.3)
+        axes[1, 2].scatter(xs, ys, s=15, alpha=0.5, color=colors[4], edgecolors="none")
+        axes[1, 2].axhline(0, color="gray", linewidth=0.5, linestyle="--")
+    axes[1, 2].set_title("PPO Loss (per substep)", fontweight="bold")
+    axes[1, 2].set_xlabel("PPO Step")
+    axes[1, 2].grid(True, alpha=0.2, linestyle="--")
 
-    plt.tight_layout()
-    plt.savefig(base_dir / "training_progress.png", dpi=100)
+    plt.tight_layout(rect=[0, 0, 1, 0.96])
+    plt.savefig(base_dir / "training_progress.png", dpi=150, bbox_inches="tight")
     plt.close()
 
 
@@ -411,12 +440,17 @@ def main():
                 if before > len(pool):
                     logger.info(f"  dropped {before - len(pool)} stale rollouts")
 
+                # Compute patch submission rate from eligible rollouts
+                all_eligible_rollouts = [r for rs in eligible.values() for r in rs]
+                patch_rate = sum(1 for r in all_eligible_rollouts if r["reward"] > 0) / len(all_eligible_rollouts) if all_eligible_rollouts else 0
+
                 pos_frac = pos / len(datums) if datums else 0
                 (BASE_DIR / f"step_{ppo_step:03d}.json").write_text(json.dumps({
                     "step": ppo_step, "checkpoint": c, "sampler": s,
                     "datums": len(datums), "used_rollouts": len(used_uids),
                     "pool_size": len(pool), "n_tasks": len(eligible),
                     "avg_reward": float(avg_r), "pos_frac": pos_frac, "losses": losses,
+                    "patch_rate": patch_rate, "n_resolved": n_resolved,
                 }, indent=2))
                 save_all()
                 update_plots(BASE_DIR)
