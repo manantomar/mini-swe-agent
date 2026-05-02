@@ -1,15 +1,20 @@
 #!/usr/bin/env python3
-"""Async continuous RL with adaptive task curriculum.
+"""Async continuous RL v3 — shared rollout pool, no per-step directories.
 
 Design:
-- Start 16 tasks x 8 rollouts = 128 containers
-- Every 30s: when 8 slots free, sample new task via EMA curriculum, launch 8 rollouts
-- Train when >=4 rollouts for >=8 tasks -> build 128-datum batch, PPO step
-- 5 min timeout on stragglers
-- Patch similarity reward (SequenceMatcher)
+- Single rollout directory, rollouts named by unique ID
+- 128 containers run continuously; refill 8 when 8 slots free
+- Rollout pool: completed rollouts accumulate with {task, reward, gen_step, used}
+- Train when >=4 rollouts for >=8 tasks in unused pool
+- After training: mark used rollouts; drop rollouts >10 steps old
+- Generation never stops between training steps
+
+Usage:
+    export TINKER_API_KEY=...
+    python rl/run_async_rl.py
 """
 
-import json, logging, os, signal, subprocess, sys, time
+import json, logging, os, subprocess, sys, time
 from collections import defaultdict
 from difflib import SequenceMatcher
 from pathlib import Path
@@ -19,7 +24,7 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(me
 logger = logging.getLogger("async_rl")
 
 BASE_MODEL = "Qwen/Qwen3-8B"
-BASE_DIR = Path("/data/manantomar/swe-bench-docker/async-rl-v2")
+BASE_DIR = Path("/data/manantomar/swe-bench-docker/async-rl-v3")
 PPO_LR = 5e-6
 LORA_RANK = 64
 GOLD_PATCHES = json.loads(Path("/data/manantomar/swe-bench-docker/gold_patches.json").read_text())
@@ -32,11 +37,14 @@ MIN_ROLLOUTS = 4
 MIN_TASKS = 8
 ROLLOUTS_PER_TASK = 8
 N_STEPS = 50
-STEP_LIMIT = 50
+STEP_LIMIT_START = 30
+STEP_LIMIT_INCREMENT = 5
+STEP_LIMIT_MAX = 100
 INIT_TASKS = 16
 EMA_ALPHA = 0.3
 SCORE_FLOOR = 0.05
 MAX_DATUM_LEN = 8192
+MAX_STALENESS = 10
 TOOLS_SPEC = [{"type": "function", "function": {"name": "bash", "parameters": {
     "type": "object", "properties": {"command": {"type": "string"}}, "required": ["command"]}}}]
 
@@ -68,13 +76,13 @@ class Curriculum:
         if path.exists(): self.scores = json.loads(path.read_text())
 
 
-def do_launch(task, uid, out_dir, sampler):
+def do_launch(task, uid, out_dir, sampler, step_limit):
     rdir = out_dir / uid
     rdir.mkdir(parents=True, exist_ok=True)
     cmd = ["mini-extra", "swebench", "--subset", "verified", "--split", "test",
         "--filter", f"^{task}$", "-m", BASE_MODEL, "--model-class", "tinker",
         "-o", str(rdir), "-w", "1", "-c", "swebench.yaml",
-        "-c", f"agent.step_limit={STEP_LIMIT}", "-c", "agent.cost_limit=100",
+        "-c", f"agent.step_limit={step_limit}", "-c", "agent.cost_limit=100",
         "-c", "model.cost_tracking=ignore_errors", "-c", "model.model_kwargs.temperature=0.7",
         "-c", "environment.pull_timeout=300"]
     if sampler:
@@ -144,25 +152,80 @@ def do_train(datums, ckpt, name):
         td.append(tinker.types.Datum(model_input=tinker.types.ModelInput.from_ints(tokens=t[:-1]),
             loss_fn_inputs={"target_tokens": t[1:], "logprobs": lp, "advantages": av}))
     np.random.shuffle(td)
-    batch = td[:BATCH_SIZE]
-    fb = tc.forward_backward(batch, loss_fn="ppo", loss_fn_config={"clip_low_threshold": 0.8, "clip_high_threshold": 1.7}).result()
-    loss = fb.metrics.get("loss:sum", 0) / len(batch)
-    tc.optim_step(adam).result()
+    n_substeps = min(8, max(1, (len(td) + BATCH_SIZE - 1) // BATCH_SIZE))
+    losses = []
+    for sub in range(n_substeps):
+        batch = td[sub * BATCH_SIZE:(sub + 1) * BATCH_SIZE]
+        if not batch: break
+        fb = tc.forward_backward(batch, loss_fn="ppo", loss_fn_config={"clip_low_threshold": 0.8, "clip_high_threshold": 1.7}).result()
+        loss = fb.metrics.get("loss:sum", 0) / len(batch)
+        losses.append(loss)
+        tc.optim_step(adam).result()
+        logger.info(f"    substep {sub}: loss={loss:.4f} batch={len(batch)}")
     c = tc.save_state(name=name).result().path
     s = tc.save_weights_for_sampler(name=f"{name}-sampler").result().path
-    logger.info(f"  train: loss={loss:.4f} batch={len(batch)}/{len(td)}")
-    return c, s
+    logger.info(f"  train done: {n_substeps} substeps, {len(td)} datums")
+    return c, s, losses
 
 
-def kill_proc(r):
-    try: os.killpg(os.getpgid(r["proc"].pid), signal.SIGTERM)
-    except: pass
-    try: r["proc"].kill()
-    except: pass
+def update_plots(base_dir):
+    """Generate live training plots after each PPO step."""
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    steps, avg_rewards, n_datums, pos_fracs, losses = [], [], [], [], []
+    for f in sorted(base_dir.glob("step_*.json")):
+        r = json.loads(f.read_text())
+        steps.append(r["step"])
+        avg_rewards.append(r.get("avg_reward", 0))
+        n_datums.append(r.get("datums", 0))
+        pos_fracs.append(r.get("pos_frac", 0))
+        losses.append(r.get("losses", []))
+
+    if len(steps) < 2:
+        return
+
+    fig, axes = plt.subplots(2, 2, figsize=(14, 8))
+    fig.suptitle("Async RL Training Progress", fontsize=14)
+
+    axes[0, 0].plot(steps, avg_rewards, "b.-")
+    axes[0, 0].set_title("Avg Patch Similarity Reward")
+    axes[0, 0].set_xlabel("PPO Step")
+    axes[0, 0].grid(True, alpha=0.3)
+
+    axes[0, 1].plot(steps, n_datums, "g.-")
+    axes[0, 1].set_title("Datums per Step")
+    axes[0, 1].set_xlabel("PPO Step")
+    axes[0, 1].grid(True, alpha=0.3)
+
+    axes[1, 0].plot(steps, pos_fracs, "r.-")
+    axes[1, 0].set_title("Positive Datum Fraction")
+    axes[1, 0].set_xlabel("PPO Step")
+    axes[1, 0].set_ylim(0, 1)
+    axes[1, 0].grid(True, alpha=0.3)
+
+    # Flatten all losses
+    all_losses = []
+    for step, ls in zip(steps, losses):
+        for l in ls:
+            all_losses.append((step, l))
+    if all_losses:
+        xs, ys = zip(*all_losses)
+        axes[1, 1].scatter(xs, ys, s=10, alpha=0.5)
+        axes[1, 1].set_title("PPO Loss (per substep)")
+        axes[1, 1].set_xlabel("PPO Step")
+        axes[1, 1].grid(True, alpha=0.3)
+
+    plt.tight_layout()
+    plt.savefig(base_dir / "training_progress.png", dpi=100)
+    plt.close()
 
 
 def main():
     BASE_DIR.mkdir(parents=True, exist_ok=True)
+    rollout_dir = BASE_DIR / "rollouts"
+    rollout_dir.mkdir(exist_ok=True)
     sf = BASE_DIR / "state.json"
     state = json.loads(sf.read_text()) if sf.exists() else {"step": 0, "checkpoint": "", "sampler_path": ""}
     cur = Curriculum(EASY_POOL)
@@ -170,88 +233,126 @@ def main():
     rng = np.random.RandomState(42)
     uidc = 0
 
-    for step in range(state["step"], N_STEPS):
-        state["step"] = step
-        sn = f"ppo-{step:03d}"
-        sd = BASE_DIR / sn; sd.mkdir(parents=True, exist_ok=True)
-        logger.info(f"\n{'='*50}\n  GRPO {step}/{N_STEPS}\n{'='*50}")
-        logger.info(f"  {cur.summary()}")
+    # Rollout pool: [{uid, task, rdir, reward, gen_step, used}]
+    pool = []
+    pool_file = BASE_DIR / "pool.json"
+    if pool_file.exists():
+        pool = json.loads(pool_file.read_text())
+        for r in pool: r["rdir"] = Path(r["rdir"])
 
-        active = {}
-        done_r = defaultdict(list)
-        done_d = defaultdict(list)
-        freed = 0; t0 = time.time()
+    active = {}
+    ppo_step = state["step"]
+    freed = 0
 
-        for task in cur.sample_n(INIT_TASKS, rng):
+    def save_all():
+        json.dump([{**r, "rdir": str(r["rdir"])} for r in pool], pool_file.open("w"))
+        sf.write_text(json.dumps(state))
+        cur.save(BASE_DIR / "scores.json")
+
+    def cur_step_limit():
+        return min(STEP_LIMIT_MAX, STEP_LIMIT_START + ppo_step * STEP_LIMIT_INCREMENT)
+
+    # Initial launch
+    logger.info(f"\n  Starting async RL from step {ppo_step}, pool={len(pool)} rollouts, step_limit={cur_step_limit()}")
+    for task in cur.sample_n(INIT_TASKS, rng):
+        for _ in range(ROLLOUTS_PER_TASK):
+            uidc += 1; uid = f"r{uidc:05d}"
+            active[uid] = do_launch(task, uid, rollout_dir, state["sampler_path"], cur_step_limit())
+            time.sleep(0.1)
+    logger.info(f"  launched {len(active)}")
+
+    while ppo_step < N_STEPS:
+        now = time.time()
+
+        # Poll active rollouts
+        for uid, r in list(active.items()):
+            if r["proc"].poll() is not None:
+                rw = get_reward(r["rdir"], r["task"])
+                pool.append({"uid": uid, "task": r["task"], "rdir": r["rdir"],
+                             "reward": rw, "gen_step": ppo_step, "used": False})
+                cur.update(r["task"], [rw])
+                del active[uid]; freed += 1
+            elif now - r["t0"] > ROLLOUT_TIMEOUT:
+                try: r["proc"].terminate()
+                except: pass
+                logger.info(f"    timeout: {r['task'].split('__')[1]} ({uid})")
+                del active[uid]; freed += 1
+
+        # Refill
+        while freed >= ROLLOUTS_PER_TASK and len(active) + ROLLOUTS_PER_TASK <= MAX_CONTAINERS:
+            nt = cur.sample_one(rng)
             for _ in range(ROLLOUTS_PER_TASK):
-                uidc += 1
-                active[f"r{uidc:05d}"] = do_launch(task, f"r{uidc:05d}", sd, state["sampler_path"])
-                time.sleep(0.1)
-        logger.info(f"  launched {len(active)}")
+                uidc += 1; uid = f"r{uidc:05d}"
+                active[uid] = do_launch(nt, uid, rollout_dir, state["sampler_path"], cur_step_limit())
+            freed -= ROLLOUTS_PER_TASK
+            n_unused = sum(1 for r in pool if not r["used"])
+            logger.info(f"    +{nt.split('__')[1]} ({len(active)} active, {n_unused} unused)")
 
-        while active:
-            now = time.time()
-            for uid, r in list(active.items()):
-                if r["proc"].poll() is not None:
-                    rw = get_reward(r["rdir"], r["task"])
-                    done_r[r["task"]].append(rw)
-                    done_d[r["task"]].append({"rdir": r["rdir"], "reward": rw})
-                    del active[uid]; freed += 1
-                elif now - r["t0"] > ROLLOUT_TIMEOUT:
-                    kill_proc(r)
-                    logger.info(f"    timeout: {r['task'].split('__')[1]} ({uid})")
-                    del active[uid]; freed += 1
+        # Check training condition on UNUSED rollouts
+        unused = [r for r in pool if not r["used"]]
+        task_rollouts = defaultdict(list)
+        for r in unused:
+            task_rollouts[r["task"]].append(r)
+        eligible = {t: rs for t, rs in task_rollouts.items() if len(rs) >= MIN_ROLLOUTS}
 
-            while freed >= ROLLOUTS_PER_TASK and len(active) + ROLLOUTS_PER_TASK <= MAX_CONTAINERS:
-                nt = cur.sample_one(rng)
-                for _ in range(ROLLOUTS_PER_TASK):
-                    uidc += 1
-                    active[f"r{uidc:05d}"] = do_launch(nt, f"r{uidc:05d}", sd, state["sampler_path"])
-                freed -= ROLLOUTS_PER_TASK
-                nd = sum(len(v) for v in done_r.values())
-                logger.info(f"    +{nt.split('__')[1]} ({len(active)} active, {nd} done)")
+        if len(eligible) >= MIN_TASKS:
+            logger.info(f"\n{'='*50}\n  GRPO {ppo_step}/{N_STEPS} — {len(eligible)} tasks ready\n{'='*50}")
+            logger.info(f"  {cur.summary()}")
 
-            elig = [t for t, rs in done_r.items() if len(rs) >= MIN_ROLLOUTS]
-            if len(elig) >= MIN_TASKS:
-                logger.info(f"  ready: {len(elig)} tasks ({time.time()-t0:.0f}s)")
-                break
-            time.sleep(30)
+            # Build datums
+            datums = []
+            used_uids = set()
+            for task, rollouts in eligible.items():
+                rewards = [r["reward"] for r in rollouts]
+                mean_r = np.mean(rewards)
+                for r in rollouts:
+                    adv = r["reward"] - mean_r
+                    if abs(adv) < 1e-6: continue
+                    ds = make_datums(r["rdir"], task, adv)
+                    datums.extend(ds)
+                    used_uids.add(r["uid"])
 
-        for r in active.values(): kill_proc(r)
-        time.sleep(3)
+            pos = sum(1 for d in datums if d["advantage"] > 0)
+            avg_r = np.mean([r["reward"] for rs in eligible.values() for r in rs])
+            logger.info(f"  datums: {len(datums)} (pos={pos}), from {len(used_uids)} rollouts, avg_reward={avg_r:.3f}")
 
-        gt = time.time() - t0
-        nc = sum(len(v) for v in done_r.values())
-        ar = np.mean([r for rs in done_r.values() for r in rs]) if done_r else 0
-        logger.info(f"  gen: {nc} rollouts, {len(done_r)} tasks, avg_r={ar:.3f} ({gt:.0f}s)")
+            if len(datums) >= BATCH_SIZE:
+                c, s, losses = do_train(datums, state["checkpoint"], f"ppo-{ppo_step:03d}")
+                state["checkpoint"] = c; state["sampler_path"] = s
 
-        for t, rs in done_r.items(): cur.update(t, rs)
+                # Mark used rollouts
+                for r in pool:
+                    if r["uid"] in used_uids:
+                        r["used"] = True
 
-        datums = []
-        for t in [t for t, rs in done_r.items() if len(rs) >= MIN_ROLLOUTS]:
-            mr = np.mean(done_r[t])
-            for i, rd in enumerate(done_d[t]):
-                if i >= len(done_r[t]): break
-                a = done_r[t][i] - mr
-                if abs(a) < 1e-6: continue
-                datums.extend(make_datums(rd["rdir"], t, a))
+                # Drop stale rollouts
+                before = len(pool)
+                pool = [r for r in pool if ppo_step - r["gen_step"] <= MAX_STALENESS]
+                if before > len(pool):
+                    logger.info(f"  dropped {before - len(pool)} stale rollouts")
 
-        pos = sum(1 for d in datums if d["advantage"] > 0)
-        logger.info(f"  datums: {len(datums)} (pos={pos})")
+                pos_frac = pos / len(datums) if datums else 0
+                (BASE_DIR / f"step_{ppo_step:03d}.json").write_text(json.dumps({
+                    "step": ppo_step, "checkpoint": c, "sampler": s,
+                    "datums": len(datums), "used_rollouts": len(used_uids),
+                    "pool_size": len(pool), "n_tasks": len(eligible),
+                    "avg_reward": float(avg_r), "pos_frac": pos_frac, "losses": losses,
+                }, indent=2))
+                save_all()
+                update_plots(BASE_DIR)
+                logger.info(f"  ppo-{ppo_step:03d} done, pool={len(pool)} ({sum(1 for r in pool if not r['used'])} unused)")
 
-        if len(datums) < BATCH_SIZE:
-            logger.warning(f"  skip ({len(datums)}<{BATCH_SIZE})")
-            sf.write_text(json.dumps(state)); cur.save(BASE_DIR / "scores.json")
-            continue
+                ppo_step += 1
+                state["step"] = ppo_step
+            else:
+                logger.warning(f"  only {len(datums)} datums, need more rollouts")
 
-        c, s = do_train(datums, state["checkpoint"], sn)
-        state["checkpoint"] = c; state["sampler_path"] = s
-        w = time.time() - t0
-        (sd / "results.json").write_text(json.dumps({"step": sn, "wall": w, "ckpt": c, "sampler": s,
-            "datums": len(datums), "avg_r": float(ar), "done": nc, "tasks": len(done_r), "gen_s": gt}, indent=2))
-        sf.write_text(json.dumps(state)); cur.save(BASE_DIR / "scores.json")
-        logger.info(f"  {sn} done in {w:.0f}s")
+        time.sleep(30)
 
+    for r in active.values():
+        try: r["proc"].terminate()
+        except: pass
+    save_all()
     logger.info(f"\n  DONE: {state['checkpoint']}")
 
 if __name__ == "__main__":
